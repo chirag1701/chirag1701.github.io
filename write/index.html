@@ -71,6 +71,8 @@
   #editor .toastui-editor-toolbar { position: sticky; top: 57px; z-index: 10; }
   #editor .toastui-editor-defaultUI-toolbar { display: flex; flex-wrap: wrap; height: auto; }
   #editor .toastui-editor-toolbar-group { flex-wrap: wrap; }
+  #editor .tool-btn { width: auto; height: 32px; margin: 7px 4px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); color: var(--fg); font: 600 13px var(--sans); cursor: pointer; white-space: nowrap; }
+  #editor .tool-btn:hover { border-color: var(--fg); }
   #editor .toastui-editor-mode-switch { background: var(--bg); border-top: 1px solid var(--line); }
   #editor .ProseMirror, #editor .toastui-editor-contents { font-family: var(--serif); font-size: 20px; line-height: 1.65; color: var(--fg); }
   #editor .toastui-editor-contents h1, #editor .toastui-editor-contents h2, #editor .toastui-editor-contents h3 { font-family: var(--sans); border: 0; }
@@ -171,8 +173,9 @@
   var SITE_URL = "https://chirag1701.github.io"
   var POSTS_DIR = "_posts"
   var IMAGES_DIR = "assets/images"
-  var RAW_IMG = "https://raw.githubusercontent.com/" + OWNER + "/" + SITE_REPO + "/HEAD/" + IMAGES_DIR + "/"
-  var SITE_IMG = "/" + IMAGES_DIR + "/"
+  var FILES_DIR = "assets/files"
+  var RAW_ASSETS = "https://raw.githubusercontent.com/" + OWNER + "/" + SITE_REPO + "/HEAD/assets/"
+  var SITE_ASSETS = "/assets/"
 
   // ---------------------------------------------------------------- storage helpers
   function lsGet(k) { try { return localStorage.getItem(k) } catch (e) { return null } }
@@ -427,10 +430,55 @@
       placeholder: "Tell your story…",
       usageStatistics: false,
       theme: dark ? "dark" : "light",
-      toolbarItems: [["heading", "bold", "italic", "strike"], ["quote", "hr"], ["ul", "ol"], ["link", "image", "code", "codeblock", "table"]],
+      toolbarItems: [
+        [{ name: "insertImage", tooltip: "Insert image", el: toolBtn("🖼 Image", function () { pickFiles("image/*", insertFiles) }) },
+         { name: "attachFile", tooltip: "Attach a file (PDF, Word, slides…)", el: toolBtn("📎 Attach file", function () { pickFiles("", insertFiles) }) }],
+        ["heading", "bold", "italic", "strike"], ["quote", "hr"], ["ul", "ol"], ["link", "code", "codeblock", "table"]],
       hooks: { addImageBlobHook: uploadImage },
       events: { change: markDirty }
     })
+    // Drag & drop / paste of non-image files (images are handled by the editor's own hook)
+    var root = $("editor")
+    function nonImages(list) { return Array.prototype.filter.call(list || [], function (f) { return !/^image\//.test(f.type) }) }
+    root.addEventListener("drop", function (e) {
+      var files = nonImages(e.dataTransfer && e.dataTransfer.files)
+      if (!files.length) return
+      e.preventDefault(); e.stopPropagation()
+      insertFiles(files)
+    }, true)
+    root.addEventListener("paste", function (e) {
+      var files = nonImages(e.clipboardData && e.clipboardData.files)
+      if (!files.length) return
+      e.preventDefault(); e.stopPropagation()
+      insertFiles(files)
+    }, true)
+  }
+
+  function toolBtn(label, onClick) {
+    var b = document.createElement("button")
+    b.type = "button"; b.className = "tool-btn"; b.textContent = label
+    b.addEventListener("click", function (e) { e.preventDefault(); onClick() })
+    return b
+  }
+  var picker = document.createElement("input")
+  picker.type = "file"; picker.multiple = true; picker.style.display = "none"
+  document.body.appendChild(picker)
+  function pickFiles(accept, cb) {
+    picker.value = ""; picker.accept = accept
+    picker.onchange = function () { if (picker.files.length) cb(Array.prototype.slice.call(picker.files)) }
+    picker.click()
+  }
+  // Uploads each file, then inserts it at the cursor: images inline, everything else as a 📎 link.
+  function insertFiles(files) {
+    files.reduce(function (p, f) {
+      return p.then(function () {
+        return uploadAsset(f).then(function (a) {
+          if (a.isImage) editor.exec("addImage", { imageUrl: a.url, altText: a.alt })
+          else editor.exec("addLink", { linkUrl: a.url, linkText: "📎 " + f.name })
+          markDirty()
+        })
+      })
+    }, Promise.resolve()).then(function () { setStatus("Unsaved changes") }).catch(fail)
   }
   function markDirty() { if (!cur || cur.loading) return; dirty = true; setStatus("Unsaved changes"); autosave() }
 
@@ -443,26 +491,33 @@
     }, 600)
   }
 
-  // Images: upload to the public site repo. Show the raw GitHub URL while editing (works instantly),
-  // and store the site path (/assets/images/…) in the post.
-  function toEditor(md) { return md.split("](" + SITE_IMG).join("](" + RAW_IMG) }
+  // Images & files: uploaded to the public site repo (readers need to see them). While editing we show the
+  // raw GitHub URL (works instantly); the post stores the site path (/assets/…).
+  function toEditor(md) { return md.split("](" + SITE_ASSETS).join("](" + RAW_ASSETS) }
   function fromEditor(md) {
-    return md.split("](" + RAW_IMG).join("](" + SITE_IMG)
+    return md.split("](" + RAW_ASSETS).join("](" + SITE_ASSETS)
       // the rich editor escapes footnote definitions ("\[^1\]: note") — restore them so they work on the site
       .replace(/^\\\[\^([^\]\n]+?)\\\]:/gm, "[^$1]:")
       .replace(/\\\[\^([^\]\n]+?)\\\]/g, "[^$1]")
   }
-  function uploadImage(blob, done) {
-    var ext = ((blob.name || "").match(/\.([a-z0-9]+)$/i) || [, (blob.type.split("/")[1] || "png")])[1].toLowerCase().replace("jpeg", "jpg")
-    var base = slugify((blob.name || "image").replace(/\.[^.]+$/, ""))
+  var MAX_MB = 25
+  function uploadAsset(blob) {
+    var isImage = /^image\//.test(blob.type || "")
+    var extFromType = (blob.type.split("/")[1] || "bin").replace("jpeg", "jpg").replace(/[^a-z0-9]/gi, "")
+    var ext = ((blob.name || "").match(/\.([a-z0-9]+)$/i) || [, extFromType])[1].toLowerCase()
+    var base = slugify((blob.name || (isImage ? "image" : "file")).replace(/\.[^.]+$/, ""))
     var name = Date.now().toString(36) + "-" + base + "." + ext
-    setStatus("Uploading image…")
-    blob.arrayBuffer().then(function (buf) {
-      return api(contentsPath(SITE_REPO, IMAGES_DIR + "/" + name), { method: "PUT", body: { message: "Upload image " + name, content: bytesToB64(new Uint8Array(buf)) } })
+    var dir = isImage ? IMAGES_DIR : FILES_DIR
+    if (blob.size > MAX_MB * 1024 * 1024) return Promise.reject(new Error((blob.name || "File") + " is over " + MAX_MB + " MB — too big to upload here."))
+    setStatus("Uploading " + (blob.name || name) + "…")
+    return blob.arrayBuffer().then(function (buf) {
+      return api(contentsPath(SITE_REPO, dir + "/" + name), { method: "PUT", body: { message: "Upload " + name, content: bytesToB64(new Uint8Array(buf)) } })
     }).then(function () {
-      done(RAW_IMG + name, base.replace(/-/g, " "))
-      setStatus("Unsaved changes")
-    }).catch(fail)
+      return { url: RAW_ASSETS + dir.replace(/^assets\//, "") + "/" + name, alt: base.replace(/-/g, " "), isImage: isImage }
+    })
+  }
+  function uploadImage(blob, done) {
+    uploadAsset(blob).then(function (a) { done(a.url, a.alt); setStatus("Unsaved changes") }).catch(fail)
     return false
   }
 
@@ -667,7 +722,7 @@
   window.addEventListener("beforeunload", function (e) { if (dirty) { e.preventDefault(); e.returnValue = "" } })
 
   // ---------------------------------------------------------------- start
-  window.__write = { parseDoc: parseDoc, serializeDoc: serializeDoc, slugify: slugify, b64enc: b64enc, b64dec: b64dec, toEditor: toEditor, fromEditor: fromEditor, editor: function () { return editor } }
+  window.__write = { parseDoc: parseDoc, serializeDoc: serializeDoc, slugify: slugify, b64enc: b64enc, b64dec: b64dec, toEditor: toEditor, fromEditor: fromEditor, editor: function () { return editor }, insertFiles: function (f) { return insertFiles(f) } }
   if (!token) openSettings()
   else if (location.hash === "#new") newStory()
   else if (/^#.+\/_posts\//.test(location.hash)) {
