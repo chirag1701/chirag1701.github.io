@@ -29,8 +29,6 @@ nav:
     url: /resume.pdf
     newtab: true
 
-# Used for the "If you liked this post…" line at the end of every post.
-subscribe_url: ""   # put your newsletter URL here to add "consider subscribing" to every post
 
 # ---------------------------------------------------------------
 # Build settings (you normally don't need to touch these)

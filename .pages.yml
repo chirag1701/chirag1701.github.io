@@ -27,15 +27,6 @@ content:
         description: e.g. ai, careers, life
         type: string
         list: true
-      - name: hn
-        label: Hacker News discussion link (optional)
-        type: string
-      - name: lobsters
-        label: Lobsters discussion link (optional)
-        type: string
-      - name: reddit
-        label: Reddit discussion link (optional)
-        type: string
       - name: body
         label: Post
         type: rich-text

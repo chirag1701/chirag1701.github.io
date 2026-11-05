@@ -14,7 +14,6 @@ Each post is a file in the `_posts` folder, named like `2026-11-04-how-this-blog
 ---
 title: How this blog works
 tags: [meta, tools]
-hn: https://news.ycombinator.com/item?id=123   # optional discussion link
 ---
 ```
 

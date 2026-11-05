@@ -9,7 +9,6 @@ layout: default
 </section></div>
 
 <hr style="margin-bottom:1.75rem">
-<p>If you liked this post{% if site.subscribe_url and site.subscribe_url != "" %}, consider <a href="{{ site.subscribe_url }}" target="_blank" rel="noopener">subscribing</a> to email updates about my new posts, or{% else %}, consider{% endif %} <a href="https://news.ycombinator.com/submitlink?u={{ page.url | absolute_url | url_encode }}&amp;t={{ page.title | url_encode }}" target="_blank" rel="noopener">sharing it on Hacker News</a>.</p>
 
 {%- assign related = nil -%}
 {%- for p in site.posts -%}

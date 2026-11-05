@@ -10,8 +10,7 @@ footnotes that float into the margin as sidenotes, automatic dark mode, and Goog
 3. In the repo: **Settings → Pages → Build and deployment → Source: "Deploy from a branch"**, branch `main`, folder `/ (root)`.
 4. Wait a minute or two, then open `https://<your-username>.github.io`.
 
-`_config.yml` is already set up for `chirag1701.github.io`. To add a newsletter later, uncomment the
-`subscribe` entry in `nav` and set `subscribe_url`.
+`_config.yml` is already set up for `chirag1701.github.io`. Edit the `nav` list there to change the menu.
 
 > Using a repo with any other name (e.g. `blog`)? Set `baseurl: "/blog"` in `_config.yml`;
 > the site will be at `https://<your-username>.github.io/blog`.
@@ -24,9 +23,6 @@ Add a file to `_posts/` named `YYYY-MM-DD-some-title.md`:
 ---
 title: Some title
 tags: [ai, careers]
-hn: https://news.ycombinator.com/item?id=...   # optional discussion icons
-lobsters: https://lobste.rs/s/...
-reddit: https://reddit.com/r/...
 ---
 
 Your post in Markdown. Footnotes[^1] become sidenotes on wide screens.
