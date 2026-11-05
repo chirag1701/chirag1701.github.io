@@ -1,9 +1,10 @@
 ---
 title: How this blog works
-tags: [meta, tools]
-popular: true
+tags:
+  - meta
+  - tools
+popular: false
 ---
-
 This blog is a set of Markdown files in a GitHub repository. GitHub Pages turns them into a website every time I push. There's no database, no CMS, and nothing to pay for.
 
 ## Writing a post
