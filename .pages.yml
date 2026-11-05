@@ -1,0 +1,71 @@
+# Pages CMS configuration — https://pagescms.org/docs/configuration/
+# Lets you write posts at https://app.pagescms.org instead of editing files by hand.
+
+media:
+  input: assets/images
+  output: /assets/images
+  rename: safe
+  categories: [image]
+
+content:
+  - name: posts
+    label: Posts
+    type: collection
+    path: _posts
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{day}-{primary}.md"
+    view:
+      primary: title
+      fields: [title, tags, popular]
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: tags
+        label: Tags
+        description: e.g. ai, careers, life
+        type: string
+        list: true
+      - name: popular
+        label: Show under "popular"
+        type: boolean
+        default: false
+      - name: hn
+        label: Hacker News discussion link (optional)
+        type: string
+      - name: lobsters
+        label: Lobsters discussion link (optional)
+        type: string
+      - name: reddit
+        label: Reddit discussion link (optional)
+        type: string
+      - name: body
+        label: Post
+        type: rich-text
+        options:
+          format: markdown
+
+  - name: about
+    label: About page
+    type: file
+    path: about.md
+    format: yaml-frontmatter
+    fields:
+      - name: layout
+        type: string
+        hidden: true
+        default: page
+      - name: title
+        label: Title
+        type: string
+        default: About
+      - name: permalink
+        type: string
+        hidden: true
+        default: /about/
+      - name: body
+        label: About me
+        type: rich-text
+        options:
+          format: markdown

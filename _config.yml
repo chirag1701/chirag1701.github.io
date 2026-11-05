@@ -46,6 +46,18 @@ kramdown:
   syntax_highlighter: rouge
   footnote_backlink: "↩"
 
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: page
+
 paginate: 20
 paginate_path: "/page/:num/"
 
