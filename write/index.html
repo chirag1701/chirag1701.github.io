@@ -2,144 +2,217 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Write · chirag sindhwani</title>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://uicdn.toast.com; style-src 'self' 'unsafe-inline' https://uicdn.toast.com; img-src * data: blob:; connect-src https://api.github.com; font-src 'self' data:; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#191919">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Write">
+<title>Write</title>
+<link rel="manifest" href="/write/manifest.webmanifest">
+<link rel="icon" href="/write/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/write/icon-180.png">
 <link rel="stylesheet" href="https://uicdn.toast.com/editor/3.2.2/toastui-editor.min.css">
 <link rel="stylesheet" href="https://uicdn.toast.com/editor/3.2.2/theme/toastui-editor-dark.min.css">
 <style>
   :root {
-    --bg: #ffffff; --fg: #242424; --muted: #6b6b6b; --line: #e6e6e6; --soft: #f7f7f7;
-    --accent: #1a8917; --accent-hover: #156d12; --danger: #c94a4a; --chip: #f2f2f2;
+    --bg: #ffffff; --fg: #242424; --muted: #6b6b6b; --line: #e6e6e6; --soft: #f5f5f5;
+    --accent: #1a8917; --accent-hover: #156d12; --danger: #c94a4a; --chip: #f0f0f0;
     --serif: Georgia, Cambria, "Times New Roman", serif;
     --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --bar-h: 57px;
   }
   @media (prefers-color-scheme: dark) {
-    :root { --bg: #191919; --fg: #e6e6e6; --muted: #9a9a9a; --line: #333; --soft: #222; --chip: #2a2a2a; --accent: #2fa52b; --accent-hover: #3cbf37; }
+    :root { --bg: #191919; --fg: #e6e6e6; --muted: #9a9a9a; --line: #333; --soft: #232323; --chip: #2a2a2a; --accent: #2fa52b; --accent-hover: #3cbf37; }
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); }
-  button, input { font: inherit; color: inherit; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); -webkit-text-size-adjust: 100%; }
+  button, input, textarea { font: inherit; color: inherit; }
   a { color: inherit; }
   .hidden { display: none !important; }
 
-  /* Top bar */
-  .bar { position: sticky; top: 0; z-index: 20; background: var(--bg); border-bottom: 1px solid var(--line); }
-  .bar-inner { max-width: 1040px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
-  .brand { font-weight: 800; font-size: 20px; letter-spacing: -0.02em; text-decoration: none; white-space: nowrap; }
-  .brand span { font-weight: 400; color: var(--muted); }
-  .status { color: var(--muted); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* ---------- top bar ---------- */
+  .bar { position: sticky; top: 0; z-index: 30; background: var(--bg); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top); }
+  .bar-inner { max-width: 1040px; margin: 0 auto; padding: 10px 16px; min-height: var(--bar-h); display: flex; align-items: center; gap: 8px; }
+  .brand { font-weight: 800; font-size: 20px; letter-spacing: -0.02em; text-decoration: none; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+  .brand .back { font-weight: 400; font-size: 22px; }
+  .status { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   .spacer { flex: 1; }
-  .btn { border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 7px 16px; cursor: pointer; font-size: 14px; white-space: nowrap; }
+  .actions { display: flex; gap: 8px; align-items: center; }
+  .btn { border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 8px 16px; cursor: pointer; font-size: 14px; white-space: nowrap; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; min-height: 38px; }
   .btn:hover { border-color: var(--fg); }
   .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
   .btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
   .btn.danger { color: var(--danger); }
-  .btn.ghost { border-color: transparent; }
+  .btn.icon { padding: 8px 11px; }
   .btn:disabled { opacity: 0.5; cursor: default; }
   .menu-wrap { position: relative; }
-  .menu { position: absolute; right: 0; top: calc(100% + 6px); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,.12); min-width: 180px; padding: 6px 0; }
-  .menu button, .menu a { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 9px 16px; cursor: pointer; font-size: 14px; text-decoration: none; }
-  .menu button:hover, .menu a:hover { background: var(--soft); }
+  .menu { position: absolute; right: 0; top: calc(100% + 6px); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 8px 28px rgba(0,0,0,.18); min-width: 220px; padding: 6px 0; z-index: 40; }
+  .menu-item { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 12px 18px; cursor: pointer; font-size: 15px; text-decoration: none; color: var(--fg); }
+  .menu-item:hover { background: var(--soft); }
+  .menu-item.danger { color: var(--danger); }
+  .menu-sep { height: 1px; background: var(--line); margin: 6px 0; }
 
-  main { max-width: 740px; margin: 0 auto; padding: 32px 16px 96px; }
+  main { max-width: 740px; margin: 0 auto; padding: 28px 16px calc(120px + env(safe-area-inset-bottom)); }
 
-  /* Dashboard */
-  .dash-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
-  .dash-head h1 { font-family: var(--serif); font-size: 40px; margin: 0; letter-spacing: -0.02em; }
-  .tabs { display: flex; gap: 24px; border-bottom: 1px solid var(--line); margin: 24px 0 8px; }
-  .tab { background: none; border: 0; padding: 12px 0; cursor: pointer; color: var(--muted); border-bottom: 1px solid transparent; margin-bottom: -1px; font-size: 15px; }
-  .tab.active { color: var(--fg); border-bottom-color: var(--fg); }
-  .story { padding: 20px 0; border-bottom: 1px solid var(--line); display: flex; gap: 16px; align-items: flex-start; }
-  .story-main { flex: 1; min-width: 0; cursor: pointer; }
-  .story-title { font-family: var(--serif); font-size: 21px; font-weight: 700; margin: 0 0 6px; line-height: 1.25; }
-  .story-meta { color: var(--muted); font-size: 13px; }
-  .story-actions { display: flex; gap: 6px; flex-shrink: 0; }
-  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--chip); color: var(--muted); margin-left: 6px; vertical-align: 2px; }
-  .empty { color: var(--muted); padding: 32px 0; font-size: 15px; }
-
-  /* Editor */
-  .title-input { width: 100%; border: 0; outline: 0; background: transparent; font-family: var(--serif); font-size: 42px; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; resize: none; overflow: hidden; padding: 0; margin: 8px 0 12px; }
-  .title-input::placeholder { color: var(--line); }
-  .tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 20px; }
-  .chip { background: var(--chip); border-radius: 999px; padding: 4px 6px 4px 12px; font-size: 13px; display: inline-flex; align-items: center; gap: 4px; }
-  .chip button { border: 0; background: none; cursor: pointer; color: var(--muted); font-size: 15px; line-height: 1; padding: 0 4px; }
-  .tag-input { border: 0; outline: 0; background: transparent; font-size: 14px; min-width: 160px; padding: 4px 0; color: var(--muted); }
-  #editor .toastui-editor-defaultUI { border: 0; }
-  #editor .toastui-editor-defaultUI-toolbar { background: var(--bg); border-bottom: 1px solid var(--line); position: sticky; top: 57px; z-index: 10; padding: 0; }
-  #editor .toastui-editor-toolbar { position: sticky; top: 57px; z-index: 10; }
-  #editor .toastui-editor-defaultUI-toolbar { display: flex; flex-wrap: wrap; height: auto; }
-  #editor .toastui-editor-toolbar-group { flex-wrap: wrap; }
-  #editor .tool-btn { width: auto; height: 32px; margin: 7px 4px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); color: var(--fg); font: 600 13px var(--sans); cursor: pointer; white-space: nowrap; }
-  #editor .tool-btn:hover { border-color: var(--fg); }
-  #editor .toastui-editor-mode-switch { background: var(--bg); border-top: 1px solid var(--line); }
-  #editor .ProseMirror, #editor .toastui-editor-contents { font-family: var(--serif); font-size: 20px; line-height: 1.65; color: var(--fg); }
-  #editor .toastui-editor-contents h1, #editor .toastui-editor-contents h2, #editor .toastui-editor-contents h3 { font-family: var(--sans); border: 0; }
-  #editor .toastui-editor-ww-container, #editor .toastui-editor-md-container { background: var(--bg); }
-  #editor .toastui-editor-contents p { margin: 0 0 1em; }
-
-  /* Settings / dialogs */
-  .card { border: 1px solid var(--line); border-radius: 12px; padding: 24px; margin: 24px 0; }
-  .card h2 { font-family: var(--serif); margin: 0 0 8px; }
+  /* ---------- lock / setup ---------- */
+  .card { border: 1px solid var(--line); border-radius: 14px; padding: 24px; margin: 24px 0; }
+  .card h2 { font-family: var(--serif); margin: 0 0 8px; font-size: 26px; }
   .card p, .card li { color: var(--muted); line-height: 1.6; font-size: 15px; }
   .card code { background: var(--chip); padding: 1px 6px; border-radius: 4px; font-size: 13px; }
-  .field { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); margin: 8px 0 12px; font-family: ui-monospace, Consolas, monospace; font-size: 14px; }
-  .checks { list-style: none; padding: 0; margin: 12px 0; }
+  .label { display: block; font-size: 13px; font-weight: 600; margin-top: 14px; }
+  .field { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); margin: 6px 0 4px; font-size: 16px; }
+  .field:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .checks { list-style: none; padding: 0; margin: 12px 0 0; }
   .checks li { margin: 4px 0; }
-  .ok { color: var(--accent); } .bad { color: var(--danger); }
+  .ok { color: var(--accent) !important; } .bad { color: var(--danger) !important; }
+  .lock-icon { font-size: 40px; margin-bottom: 8px; }
 
-  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 10px 18px; border-radius: 8px; font-size: 14px; z-index: 100; max-width: calc(100% - 32px); box-shadow: 0 6px 24px rgba(0,0,0,.2); }
+  /* ---------- dashboard ---------- */
+  .dash-head h1 { font-family: var(--serif); font-size: 38px; margin: 0; letter-spacing: -0.02em; }
+  .tabs { display: flex; gap: 24px; border-bottom: 1px solid var(--line); margin: 20px 0 4px; }
+  .tab { background: none; border: 0; padding: 12px 0; cursor: pointer; color: var(--muted); border-bottom: 1px solid transparent; margin-bottom: -1px; font-size: 15px; }
+  .tab.active { color: var(--fg); border-bottom-color: var(--fg); }
+  .story { padding: 18px 0; border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: center; }
+  .story-main { flex: 1; min-width: 0; cursor: pointer; }
+  .story-title { font-family: var(--serif); font-size: 20px; font-weight: 700; margin: 0 0 4px; line-height: 1.25; overflow-wrap: anywhere; }
+  .story-meta { color: var(--muted); font-size: 13px; }
+  .story-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--chip); color: var(--muted); margin-left: 6px; vertical-align: 3px; font-family: var(--sans); font-weight: 400; }
+  .empty { color: var(--muted); padding: 32px 0; font-size: 15px; line-height: 1.6; }
+  .fab { position: fixed; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 25; border-radius: 999px; padding: 14px 22px; font-size: 16px; box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+
+  /* ---------- editor ---------- */
+  .title-input { width: 100%; border: 0; outline: 0; background: transparent; font-family: var(--serif); font-size: 40px; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; resize: none; overflow: hidden; padding: 0; margin: 4px 0 10px; }
+  .title-input::placeholder { color: var(--muted); opacity: .45; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 14px; }
+  .chip { background: var(--chip); border-radius: 999px; padding: 4px 6px 4px 12px; font-size: 13px; display: inline-flex; align-items: center; gap: 2px; }
+  .chip button { border: 0; background: none; cursor: pointer; color: var(--muted); font-size: 16px; line-height: 1; padding: 2px 6px; }
+  .tag-input { border: 0; outline: 0; background: transparent; font-size: 15px; min-width: 170px; padding: 6px 0; color: var(--muted); }
+
+  .tools { position: sticky; top: calc(var(--bar-h) + env(safe-area-inset-top)); z-index: 20; background: var(--bg); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+           display: flex; gap: 4px; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 6px 0; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+  .tools::-webkit-scrollbar { display: none; }
+  .tool { flex: 0 0 auto; min-width: 40px; height: 38px; padding: 0 10px; border: 1px solid transparent; border-radius: 8px; background: transparent; cursor: pointer; font-size: 15px; white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
+  .tool:hover { background: var(--soft); }
+  .tool:active { background: var(--chip); }
+  .tool.pill { border-color: var(--line); border-radius: 999px; font-size: 14px; font-weight: 600; }
+  .tool .b { font-weight: 800; } .tool .i { font-style: italic; font-family: var(--serif); } .tool .s { text-decoration: line-through; }
+  .tool-sep { flex: 0 0 1px; background: var(--line); margin: 6px 4px; }
+
+  #editor { margin-top: 8px; }
+  #editor .toastui-editor-defaultUI { border: 0; }
+  #editor .toastui-editor-defaultUI-toolbar, #editor .toastui-editor-mode-switch { display: none !important; }
+  #editor .ProseMirror, #editor .toastui-editor-contents { font-family: var(--serif); font-size: 20px; line-height: 1.65; color: var(--fg); }
+  #editor .ProseMirror { padding: 12px 0 24px; min-height: 45vh; }
+  #editor .toastui-editor-ww-container, #editor .toastui-editor-md-container, #editor .toastui-editor-main { background: var(--bg); }
+  #editor .toastui-editor-contents { padding: 0; }
+  #editor .toastui-editor-contents p { margin: 0 0 1em; }
+  #editor .toastui-editor-contents h1, #editor .toastui-editor-contents h2, #editor .toastui-editor-contents h3 { font-family: var(--sans); border: 0; color: var(--fg); }
+  #editor .toastui-editor-contents img { max-width: 100%; border-radius: 6px; }
+  #editor .toastui-editor-md-container .toastui-editor { font-size: 16px; }
+  #editor .ProseMirror .placeholder::before, #editor .placeholder { color: var(--muted); }
+
+  .notes { margin-top: 28px; border-top: 1px solid var(--line); padding-top: 18px; }
+  .notes h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 10px; display: flex; justify-content: space-between; align-items: center; }
+  .note { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+  .note-num { font-weight: 700; font-size: 14px; padding-top: 10px; min-width: 22px; text-align: right; }
+  .note textarea { flex: 1; resize: vertical; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-family: var(--serif); font-size: 16px; line-height: 1.5; }
+  .note-del { border: 0; background: none; color: var(--muted); font-size: 20px; cursor: pointer; padding: 8px; }
+  .note-warn { font-size: 12px; color: var(--danger); margin: -6px 0 10px 32px; }
+  .hint { color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+  .wordcount { color: var(--muted); font-size: 13px; margin-top: 18px; }
+
+  .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 12px 18px; border-radius: 10px; font-size: 14px; z-index: 100; width: max-content; max-width: calc(100% - 32px); box-shadow: 0 6px 24px rgba(0,0,0,.25); line-height: 1.4; }
   .toast a { color: inherit; font-weight: 700; }
 
   @media (max-width: 600px) {
-    .title-input { font-size: 32px; }
+    .title-input { font-size: 30px; }
     .dash-head h1 { font-size: 30px; }
     .status { display: none; }
-    .btn { padding: 6px 12px; }
-    .story { flex-direction: column; gap: 8px; }
+    .btn { padding: 7px 13px; }
+    .brand .word { display: none; }
+    #editor .ProseMirror, #editor .toastui-editor-contents { font-size: 18px; }
   }
 </style>
 </head>
 <body>
 
 <div class="bar"><div class="bar-inner">
-  <a class="brand" href="#" id="brand">chirag <span>write</span></a>
+  <a class="brand" href="#" id="brand"><span class="back hidden" id="back">←</span><span>write</span></a>
   <span class="status" id="status"></span>
   <span class="spacer"></span>
-  <span id="dash-actions">
-    <button class="btn ghost" id="btn-settings" title="Settings">⚙</button>
-    <button class="btn primary" id="btn-new">Write a story</button>
+  <span class="actions hidden" id="dash-actions">
+    <button class="btn icon" id="btn-lock" title="Lock now">🔒</button>
+    <button class="btn icon" id="btn-settings" title="Settings">⚙</button>
   </span>
-  <span id="edit-actions" class="hidden" style="display:flex;gap:8px;align-items:center">
-    <button class="btn" id="btn-save">Save draft</button>
+  <span class="actions hidden" id="edit-actions">
+    <button class="btn" id="btn-save">Save</button>
     <button class="btn primary" id="btn-publish">Publish</button>
     <span class="menu-wrap">
-      <button class="btn ghost" id="btn-more" aria-label="More">⋯</button>
-      <div class="menu hidden" id="more-menu">
-        <a id="menu-view" target="_blank" rel="noopener" class="hidden">View on site ↗</a>
-        <button id="menu-unpublish" class="hidden">Unpublish (move to drafts)</button>
-        <button id="menu-delete" class="btn danger" style="border:0;border-radius:0">Delete story</button>
+      <button class="btn icon" id="btn-more" aria-label="More options" aria-haspopup="true">⋯</button>
+      <div class="menu hidden" id="more-menu" role="menu">
+        <a class="menu-item hidden" id="menu-view" target="_blank" rel="noopener">View on site ↗</a>
+        <button class="menu-item" id="menu-mode" type="button">Switch to Markdown</button>
+        <button class="menu-item hidden" id="menu-unpublish" type="button">Unpublish (back to drafts)</button>
+        <div class="menu-sep"></div>
+        <button class="menu-item danger" id="menu-delete" type="button">Delete story</button>
       </div>
     </span>
   </span>
 </div></div>
 
 <main>
+  <!-- First-time setup: token + passcode -->
+  <section id="view-setup" class="hidden">
+    <div class="card">
+      <h2>Set up your writing desk</h2>
+      <p>Paste your GitHub token and choose a <strong>passcode</strong>. The token is encrypted with the passcode and kept only on this device — you'll type the passcode each time you open this page.</p>
+      <label class="label" for="setup-token">GitHub token</label>
+      <input class="field" id="setup-token" type="password" placeholder="github_pat_…" autocomplete="off" spellcheck="false">
+      <label class="label" for="setup-pass">Passcode (at least 6 characters)</label>
+      <input class="field" id="setup-pass" type="password" autocomplete="new-password">
+      <label class="label" for="setup-pass2">Repeat passcode</label>
+      <input class="field" id="setup-pass2" type="password" autocomplete="new-password">
+      <div class="row">
+        <button class="btn primary" id="btn-setup">Connect &amp; lock</button>
+        <button class="btn hidden" id="btn-setup-cancel">Cancel</button>
+      </div>
+      <ul class="checks" id="setup-checks"></ul>
+      <p class="hint" style="margin-top:16px">The token needs <strong>Contents: Read and write</strong> on <code>chirag1701.github.io</code> and <code>blog-drafts</code>. If you forget the passcode, just set up again with your token.</p>
+    </div>
+  </section>
+
+  <!-- Locked -->
+  <section id="view-lock" class="hidden">
+    <div class="card" style="text-align:center">
+      <div class="lock-icon">🔒</div>
+      <h2>Locked</h2>
+      <p>Enter your passcode to keep writing.</p>
+      <form id="unlock-form" onsubmit="return false" style="max-width:320px;margin:0 auto">
+        <input class="field" id="unlock-pass" type="password" autocomplete="current-password" placeholder="Passcode" style="text-align:center">
+        <div class="row" style="justify-content:center"><button class="btn primary" id="btn-unlock" type="submit">Unlock</button></div>
+      </form>
+      <p class="hint bad hidden" id="unlock-err" style="margin-top:12px"></p>
+      <p class="hint" style="margin-top:20px"><a href="#" id="link-reset">Forgot passcode? Set up again</a></p>
+    </div>
+  </section>
+
   <!-- Settings -->
   <section id="view-settings" class="hidden">
     <div class="card">
-      <h2>Connect to GitHub</h2>
-      <p>This editor saves your stories straight to GitHub. Paste a <strong>fine-grained personal access token</strong> that can read and write the contents of
-        <code>chirag1701.github.io</code> (published posts) and <code>blog-drafts</code> (private drafts).
-        It is stored only in this browser.</p>
-      <input class="field" id="token-input" type="password" placeholder="github_pat_…" autocomplete="off">
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn primary" id="btn-token-save">Connect</button>
-        <button class="btn hidden" id="btn-token-cancel">Cancel</button>
-        <button class="btn danger hidden" id="btn-token-forget">Disconnect this browser</button>
+      <h2>Settings</h2>
+      <p>This device keeps your GitHub token encrypted with your passcode. It locks automatically after 30 minutes without activity, and when you close the tab.</p>
+      <div class="row">
+        <button class="btn" id="btn-change">Change passcode or token</button>
+        <button class="btn danger" id="btn-forget">Remove from this device</button>
+        <button class="btn" id="btn-settings-back">Back</button>
       </div>
-      <ul class="checks" id="token-checks"></ul>
+      <p class="hint" style="margin-top:18px">Tip: on your phone, open this page and choose <strong>Add to Home Screen</strong> to get a “Write” app icon.</p>
     </div>
   </section>
 
@@ -151,88 +224,157 @@
       <button class="tab" data-tab="published">Published <span id="count-published"></span></button>
     </div>
     <div id="list"></div>
+    <button class="btn primary fab" id="btn-new">✎ New story</button>
   </section>
 
   <!-- Editor -->
   <section id="view-edit" class="hidden">
     <textarea class="title-input" id="title" rows="1" placeholder="Title"></textarea>
-    <div class="tags" id="tags"><input class="tag-input" id="tag-input" placeholder="Add a tag, press Enter"></div>
+    <div class="tags" id="tags"><input class="tag-input" id="tag-input" placeholder="+ Add a tag" enterkeyhint="done"></div>
+    <div class="tools" id="tools" role="toolbar" aria-label="Formatting"></div>
     <div id="editor"></div>
+    <div class="notes" id="notes-wrap">
+      <h3><span>Footnotes</span><button class="tool pill" id="btn-add-note" type="button">+ Add footnote</button></h3>
+      <div id="notes"></div>
+      <p class="hint" id="notes-hint">Tap where you want a footnote in your text, then press <strong>¹ Note</strong> in the toolbar (or the button above). Notes show up in the margin on your blog.</p>
+    </div>
+    <div class="wordcount" id="wordcount"></div>
   </section>
 </main>
 
-<div class="toast hidden" id="toast"></div>
+<div class="toast hidden" id="toast" role="status"></div>
 
 <script src="https://uicdn.toast.com/editor/3.2.2/toastui-editor-all.min.js"></script>
 <script>
 (function () {
-  // ---------------------------------------------------------------- config
+  "use strict"
+  // ================================================================ config
   var OWNER = "chirag1701"
-  var SITE_REPO = "chirag1701.github.io"   // public: published posts live here
-  var DRAFT_REPO = "blog-drafts"           // private: drafts live here
+  var SITE_REPO = "chirag1701.github.io"   // public: published posts
+  var DRAFT_REPO = "blog-drafts"           // private: drafts
   var SITE_URL = "https://chirag1701.github.io"
   var POSTS_DIR = "_posts"
   var IMAGES_DIR = "assets/images"
   var FILES_DIR = "assets/files"
   var RAW_ASSETS = "https://raw.githubusercontent.com/" + OWNER + "/" + SITE_REPO + "/HEAD/assets/"
   var SITE_ASSETS = "/assets/"
+  var IDLE_LOCK_MS = 30 * 60 * 1000
+  var AUTOSAVE_MS = 4000
+  var MAX_FAILS = 10
+  var MAX_MB = 25
 
-  // ---------------------------------------------------------------- storage helpers
+  var $ = function (id) { return document.getElementById(id) }
   function lsGet(k) { try { return localStorage.getItem(k) } catch (e) { return null } }
   function lsSet(k, v) { try { localStorage.setItem(k, v) } catch (e) {} }
   function lsDel(k) { try { localStorage.removeItem(k) } catch (e) {} }
+  function ssGet(k) { try { return sessionStorage.getItem(k) } catch (e) { return null } }
+  function ssSet(k, v) { try { sessionStorage.setItem(k, v) } catch (e) {} }
+  function ssDel(k) { try { sessionStorage.removeItem(k) } catch (e) {} }
 
-  var token = lsGet("write:token")
-  var $ = function (id) { return document.getElementById(id) }
+  var token = null
 
-  // ---------------------------------------------------------------- encoding
+  // ================================================================ encoding
   function bytesToB64(bytes) {
     var bin = ""
     for (var i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000))
     return btoa(bin)
   }
-  function b64enc(str) { return bytesToB64(new TextEncoder().encode(str)) }
-  function b64dec(b64) {
-    var bin = atob(b64.replace(/\s/g, ""))
-    var bytes = new Uint8Array(bin.length)
+  function b64ToBytes(b64) {
+    var bin = atob(b64.replace(/\s/g, "")), bytes = new Uint8Array(bin.length)
     for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i)
-    return new TextDecoder().decode(bytes)
+    return bytes
   }
+  function b64enc(str) { return bytesToB64(new TextEncoder().encode(str)) }
+  function b64dec(b64) { return new TextDecoder().decode(b64ToBytes(b64)) }
 
-  // ---------------------------------------------------------------- GitHub API
+  // ================================================================ vault (token encrypted with passcode)
+  function deriveKey(pass, salt) {
+    return crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]).then(function (base) {
+      return crypto.subtle.deriveKey({ name: "PBKDF2", salt: salt, iterations: 310000, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"])
+    })
+  }
+  function sealToken(tok, pass) {
+    var salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12))
+    return deriveKey(pass, salt).then(function (key) {
+      return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, new TextEncoder().encode(tok))
+    }).then(function (ct) {
+      return JSON.stringify({ v: 1, salt: bytesToB64(salt), iv: bytesToB64(iv), ct: bytesToB64(new Uint8Array(ct)) })
+    })
+  }
+  function openVault(pass) {
+    var vault = JSON.parse(lsGet("write:vault"))
+    return deriveKey(pass, b64ToBytes(vault.salt)).then(function (key) {
+      return crypto.subtle.decrypt({ name: "AES-GCM", iv: b64ToBytes(vault.iv) }, key, b64ToBytes(vault.ct))
+    }).then(function (pt) { return new TextDecoder().decode(pt) })
+  }
+  function startSession(tok) {
+    token = tok
+    ssSet("write:session", JSON.stringify({ t: tok, last: Date.now() }))
+  }
+  function touchSession() {
+    if (!token) return
+    var now = Date.now()
+    if (now - (touchSession.last || 0) < 15000) return
+    touchSession.last = now
+    ssSet("write:session", JSON.stringify({ t: token, last: now }))
+  }
+  function restoreSession() {
+    try {
+      var s = JSON.parse(ssGet("write:session"))
+      if (s && s.t && Date.now() - s.last < IDLE_LOCK_MS && lsGet("write:vault")) { token = s.t; return true }
+    } catch (e) {}
+    ssDel("write:session")
+    return false
+  }
+  function lock(reason) {
+    if (cur && dirty) saveLocal()
+    token = null
+    ssDel("write:session")
+    hideMenu()
+    show("lock")
+    $("unlock-pass").value = ""
+    $("unlock-err").classList.toggle("hidden", !reason)
+    $("unlock-err").textContent = reason || ""
+    setStatus("")
+    setTimeout(function () { $("unlock-pass").focus() }, 50)
+  }
+  ;["pointerdown", "keydown", "scroll", "touchstart"].forEach(function (ev) { window.addEventListener(ev, touchSession, { passive: true }) })
+  setInterval(function () {
+    if (!token) return
+    try {
+      var s = JSON.parse(ssGet("write:session"))
+      if (!s || Date.now() - s.last > IDLE_LOCK_MS) lock("Locked after 30 minutes without activity.")
+    } catch (e) { lock() }
+  }, 30000)
+
+  // ================================================================ GitHub API
   function api(path, opts) {
     opts = opts || {}
-    var headers = { "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "Authorization": "Bearer " + token }
+    if (!token) return Promise.reject(Object.assign(new Error("Locked"), { locked: true }))
+    var headers = { "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "Authorization": "Bearer " + (opts.token || token) }
     if (opts.body) headers["Content-Type"] = "application/json"
     return fetch("https://api.github.com" + path, { method: opts.method || "GET", headers: headers, body: opts.body ? JSON.stringify(opts.body) : undefined, cache: "no-store" })
       .then(function (res) {
         if (res.status === 404 && opts.allow404) return null
         return res.text().then(function (t) {
-          var data = t ? JSON.parse(t) : null
-          if (!res.ok) {
-            var err = new Error((data && data.message) || ("GitHub error " + res.status))
-            err.status = res.status
-            throw err
-          }
+          var data = null
+          try { data = t ? JSON.parse(t) : null } catch (e) {}
+          if (!res.ok) { var err = new Error((data && data.message) || ("GitHub error " + res.status)); err.status = res.status; throw err }
           return data
         })
       })
   }
   function contentsPath(repo, path) { return "/repos/" + OWNER + "/" + repo + "/contents/" + path.split("/").map(encodeURIComponent).join("/") }
   function listDir(repo, dir) { return api(contentsPath(repo, dir), { allow404: true }).then(function (d) { return Array.isArray(d) ? d : [] }) }
-  function getFile(repo, path) {
-    return api(contentsPath(repo, path), { allow404: true }).then(function (d) { return d ? { sha: d.sha, text: b64dec(d.content) } : null })
-  }
+  function getFile(repo, path) { return api(contentsPath(repo, path), { allow404: true }).then(function (d) { return d ? { sha: d.sha, text: b64dec(d.content) } : null }) }
   function putFile(repo, path, text, sha, message) {
     var body = { message: message, content: b64enc(text) }
     if (sha) body.sha = sha
     return api(contentsPath(repo, path), { method: "PUT", body: body }).then(function (d) { return d.content.sha })
   }
-  function deleteFile(repo, path, sha, message) {
-    return api(contentsPath(repo, path), { method: "DELETE", body: { message: message, sha: sha } })
-  }
+  function deleteFile(repo, path, sha, message) { return api(contentsPath(repo, path), { method: "DELETE", body: { message: message, sha: sha } }) }
 
-  // ---------------------------------------------------------------- front matter
+  // ================================================================ front matter + footnotes
   function unquote(v) {
     v = v.trim()
     if (v.charAt(0) === '"') { try { return JSON.parse(v) } catch (e) { return v.slice(1, -1) } }
@@ -247,8 +389,7 @@
     doc.body = text.slice(m[0].length).replace(/^\n/, "")
     var lines = m[1].split("\n"), key = null
     for (var i = 0; i < lines.length; i++) {
-      var line = lines[i]
-      var item = line.match(/^\s+-\s*(.*)$/)
+      var line = lines[i], item = line.match(/^\s+-\s*(.*)$/)
       if (item && key === "tags") { doc.tags.push(unquote(item[1])); continue }
       if (item && key === "_extra") { doc.extra.push(line); continue }
       var kv = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/)
@@ -257,8 +398,7 @@
       if (k === "title") { doc.title = unquote(v); key = "title" }
       else if (k === "published") { doc.published = !/^(false|no|off)$/i.test(v.trim()); key = "published" }
       else if (k === "tags") {
-        key = "tags"
-        v = v.trim()
+        key = "tags"; v = v.trim()
         if (v.charAt(0) === "[") doc.tags = v.replace(/^\[|\]$/g, "").split(",").map(unquote).filter(Boolean)
         else if (v) doc.tags = [unquote(v)]
       }
@@ -273,19 +413,32 @@
     out.push("---", "")
     return out.join("\n") + doc.body.replace(/\s+$/, "") + "\n"
   }
+  // Pull "[^id]: text" lines out of the body so they can be edited in the Footnotes panel.
+  var NOTE_DEF = /^\\?\[\^([^\]\s\\]+)\\?\]:[ \t]?(.*)$/
+  function splitNotes(body) {
+    var notes = [], keep = []
+    body.split("\n").forEach(function (line) {
+      var m = line.match(NOTE_DEF)
+      if (m) notes.push({ id: m[1], text: m[2].replace(/\\([.\-*_!#()[\]])/g, "$1") })
+      else keep.push(line)
+    })
+    return { body: keep.join("\n").replace(/\s+$/, ""), notes: notes }
+  }
+  function joinNotes(body, notes) {
+    var defs = notes.filter(function (n) { return n.text.trim() }).map(function (n) { return "[^" + n.id + "]: " + n.text.trim().replace(/\s*\n\s*/g, " ") })
+    return body.replace(/\s+$/, "") + (defs.length ? "\n\n" + defs.join("\n") : "") + "\n"
+  }
 
-  // ---------------------------------------------------------------- misc helpers
+  // ================================================================ helpers
   function slugify(s) {
     return (s || "").normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase()
       .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60).replace(/-+$/, "") || "untitled"
   }
-  function today() {
-    var d = new Date(), p = function (n) { return (n < 10 ? "0" : "") + n }
-    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate())
-  }
+  function today() { var d = new Date(), p = function (n) { return (n < 10 ? "0" : "") + n }; return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) }
   function fileDate(name) { var m = name.match(/^(\d{4})-(\d{2})-(\d{2})-/); return m ? new Date(+m[1], m[2] - 1, +m[3]) : null }
   function fileSlug(name) { return name.replace(/^\d{4}-\d{2}-\d{2}-/, "").replace(/\.(md|markdown|html)$/, "") }
   function fmtDate(d) { return d ? d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "" }
+  function fmtTime(d) { return d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) }
   function liveUrl(path) { return SITE_URL + "/" + fileSlug(path.split("/").pop()) + "/" }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] }) }
 
@@ -296,82 +449,120 @@
   }
   function setStatus(s) { $("status").textContent = s || "" }
   function fail(e) {
+    if (e && e.locked) return
     console.error(e)
     var msg = e && e.message ? e.message : String(e)
-    if (e && (e.status === 401)) msg = "GitHub rejected the token. Open ⚙ and reconnect."
-    if (e && (e.status === 403 || e.status === 404) && /contents/i.test(e.message || "") === false) msg += " — check the token can access both repos."
-    toast("⚠ " + esc(msg), 7000)
+    if (e && e.status === 401) { msg = "GitHub rejected the token (expired or revoked). Open ⚙ → Change passcode or token." }
+    else if (e && (e.status === 403 || e.status === 404)) msg += " — check the token can access both repos."
+    else if (e && e.status === 409) msg = "This story was changed somewhere else. Go back to the list and open it again."
+    toast("⚠ " + esc(msg), 8000)
     setStatus("")
   }
 
-  // ---------------------------------------------------------------- views
+  // ================================================================ views
+  var VIEWS = ["setup", "lock", "settings", "dash", "edit"]
   function show(view) {
-    ["settings", "dash", "edit"].forEach(function (v) { $("view-" + v).classList.toggle("hidden", v !== view) })
-    $("dash-actions").classList.toggle("hidden", view === "edit")
+    VIEWS.forEach(function (v) { $("view-" + v).classList.toggle("hidden", v !== view) })
+    $("dash-actions").classList.toggle("hidden", view !== "dash")
     $("edit-actions").classList.toggle("hidden", view !== "edit")
-    $("btn-new").classList.toggle("hidden", view !== "dash")
+    $("back").classList.toggle("hidden", view !== "edit")
+    document.body.dataset.view = view
   }
 
-  // ---------------------------------------------------------------- settings
-  function openSettings() {
-    show("settings")
-    $("token-input").value = ""
-    $("btn-token-cancel").classList.toggle("hidden", !token)
-    $("btn-token-forget").classList.toggle("hidden", !token)
-    $("token-checks").innerHTML = ""
+  // ================================================================ setup / unlock / settings
+  function openSetup(prefillToken) {
+    show("setup")
+    $("setup-token").value = prefillToken || ""
+    $("setup-pass").value = ""; $("setup-pass2").value = ""
+    $("setup-checks").innerHTML = ""
+    $("btn-setup-cancel").classList.toggle("hidden", !token)
   }
-  function checkAccess() {
-    var checks = [
-      { label: "Published posts repo (" + SITE_REPO + ")", repo: SITE_REPO },
-      { label: "Private drafts repo (" + DRAFT_REPO + ")", repo: DRAFT_REPO }
-    ]
+  function checkAccess(tok) {
+    var checks = [{ label: "Published posts (" + SITE_REPO + ")", repo: SITE_REPO }, { label: "Private drafts (" + DRAFT_REPO + ")", repo: DRAFT_REPO }]
+    var saved = token; token = tok
     return Promise.all(checks.map(function (c) {
       return api("/repos/" + OWNER + "/" + c.repo, { allow404: true }).then(function (r) {
-        c.ok = !!r && !!(r.permissions ? r.permissions.push : true)
-        c.priv = r && r.private
-        c.why = r ? "" : "not found — create it, and give the token access to it"
-        if (r && c.repo === DRAFT_REPO && !r.private) c.warn = "this repo is PUBLIC — make it private in its Settings so drafts stay hidden"
+        c.ok = !!r && (!r.permissions || r.permissions.push)
+        c.why = r ? (c.ok ? "" : "token can read but not write") : "not found, or the token wasn't given access to it"
+        if (r && c.repo === DRAFT_REPO && !r.private) { c.ok = false; c.why = "this repo is PUBLIC — make it private so drafts stay hidden" }
         return c
-      }).catch(function (e) { c.ok = false; c.why = e.message; return c })
-    }))
+      }).catch(function (e) { c.ok = false; c.why = e.status === 401 ? "token not accepted" : e.message; return c })
+    })).then(function (r) { token = saved; return r })
   }
-  $("btn-token-save").onclick = function () {
-    var v = $("token-input").value.trim()
-    if (!v) return
-    var old = token; token = v
-    $("token-checks").innerHTML = "<li>Checking…</li>"
-    checkAccess().then(function (checks) {
-      $("token-checks").innerHTML = checks.map(function (c) {
-        return "<li class='" + (c.ok ? "ok" : "bad") + "'>" + (c.ok ? "✓ " : "✗ ") + esc(c.label) + (c.why ? " — " + esc(c.why) : "") + (c.warn ? " <span class='bad'>(" + esc(c.warn) + ")</span>" : "") + "</li>"
+  $("btn-setup").onclick = function () {
+    var tok = $("setup-token").value.trim(), p1 = $("setup-pass").value, p2 = $("setup-pass2").value
+    if (!tok) return toast("Paste your GitHub token")
+    if (p1.length < 6) return toast("Passcode must be at least 6 characters")
+    if (p1 !== p2) return toast("The two passcodes don't match")
+    $("setup-checks").innerHTML = "<li>Checking…</li>"
+    checkAccess(tok).then(function (checks) {
+      $("setup-checks").innerHTML = checks.map(function (c) {
+        return "<li class='" + (c.ok ? "ok" : "bad") + "'>" + (c.ok ? "✓ " : "✗ ") + esc(c.label) + (c.why ? " — " + esc(c.why) : "") + "</li>"
       }).join("")
-      if (checks.every(function (c) { return c.ok })) {
-        lsSet("write:token", token)
-        toast("Connected ✓")
-        setTimeout(goDash, 700)
-      } else { token = old }
-    })
+      if (!checks.every(function (c) { return c.ok })) return
+      return sealToken(tok, p1).then(function (vault) {
+        lsSet("write:vault", vault); lsDel("write:token"); lsDel("write:fails")
+        startSession(tok)
+        $("setup-token").value = ""; $("setup-pass").value = ""; $("setup-pass2").value = ""
+        toast("Connected and locked with your passcode ✓")
+        goDash()
+      })
+    }).catch(fail)
   }
-  $("btn-token-cancel").onclick = function () { goDash() }
-  $("btn-token-forget").onclick = function () {
-    if (!confirm("Remove the token from this browser?")) return
-    lsDel("write:token"); token = null; openSettings()
-  }
-  $("btn-settings").onclick = openSettings
+  $("btn-setup-cancel").onclick = function () { goDash() }
 
-  // ---------------------------------------------------------------- dashboard
+  $("unlock-form").addEventListener("submit", function () {
+    var pass = $("unlock-pass").value
+    if (!pass) return
+    $("btn-unlock").disabled = true
+    openVault(pass).then(function (tok) {
+      lsDel("write:fails")
+      startSession(tok)
+      $("unlock-pass").value = ""
+      route()
+    }).catch(function () {
+      var fails = (+lsGet("write:fails") || 0) + 1
+      lsSet("write:fails", String(fails))
+      if (fails >= MAX_FAILS) {
+        lsDel("write:vault"); lsDel("write:fails")
+        toast("Too many wrong passcodes — the saved token was erased from this device. Set up again.", 8000)
+        openSetup()
+      } else {
+        $("unlock-err").textContent = "Wrong passcode (" + (MAX_FAILS - fails) + " tries left before the token is erased from this device)."
+        $("unlock-err").classList.remove("hidden")
+        $("unlock-pass").select()
+      }
+    }).then(function () { $("btn-unlock").disabled = false })
+  })
+  $("link-reset").onclick = function (e) {
+    e.preventDefault()
+    if (confirm("Set up again? You'll need your GitHub token. Your stories are safe on GitHub.")) { lsDel("write:vault"); openSetup() }
+  }
+  $("btn-lock").onclick = function () { lock() }
+  $("btn-settings").onclick = function () { show("settings") }
+  $("btn-settings-back").onclick = function () { goDash() }
+  $("btn-change").onclick = function () { openSetup() }
+  $("btn-forget").onclick = function () {
+    if (!confirm("Remove your token from this device? You'll need to paste it again to write here.")) return
+    lsDel("write:vault"); lsDel("write:token"); ssDel("write:session"); token = null
+    openSetup()
+  }
+
+  // ================================================================ dashboard
   var stories = [], activeTab = "drafts"
   function loadStories() {
     setStatus("Loading…")
     return Promise.all([listDir(DRAFT_REPO, POSTS_DIR), listDir(SITE_REPO, POSTS_DIR)]).then(function (res) {
       var entries = []
-      res[0].forEach(function (f) { if (f.type === "file" && /\.md$/.test(f.name)) entries.push({ repo: DRAFT_REPO, path: f.path, name: f.name }) })
-      res[1].forEach(function (f) { if (f.type === "file" && /\.(md|markdown)$/.test(f.name)) entries.push({ repo: SITE_REPO, path: f.path, name: f.name }) })
+      res[0].forEach(function (f) { if (f.type === "file" && /\.md$/.test(f.name)) entries.push({ repo: DRAFT_REPO, path: f.path, name: f.name, sha: f.sha }) })
+      res[1].forEach(function (f) { if (f.type === "file" && /\.(md|markdown)$/.test(f.name)) entries.push({ repo: SITE_REPO, path: f.path, name: f.name, sha: f.sha }) })
       return Promise.all(entries.map(function (e) {
         return getFile(e.repo, e.path).then(function (f) {
           var d = parseDoc(f ? f.text : "")
           e.title = d.title || fileSlug(e.name).replace(/-/g, " ")
           e.published = e.repo === SITE_REPO && d.published !== false
           e.date = fileDate(e.name)
+          e.sha = f ? f.sha : e.sha
           return e
         })
       }))
@@ -382,41 +573,49 @@
     })
   }
   function renderList() {
-    var drafts = stories.filter(function (s) { return !s.published })
-    var pubs = stories.filter(function (s) { return s.published })
+    var drafts = stories.filter(function (s) { return !s.published }), pubs = stories.filter(function (s) { return s.published })
     $("count-drafts").textContent = drafts.length ? "(" + drafts.length + ")" : ""
     $("count-published").textContent = pubs.length ? "(" + pubs.length + ")" : ""
     Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (t) { t.classList.toggle("active", t.dataset.tab === activeTab) })
     var items = activeTab === "drafts" ? drafts : pubs
     if (!items.length) {
-      $("list").innerHTML = "<div class='empty'>" + (activeTab === "drafts" ? "No drafts. Click <strong>Write a story</strong> to start one." : "Nothing published yet.") + "</div>"
+      $("list").innerHTML = "<div class='empty'>" + (activeTab === "drafts" ? "No drafts yet.<br>Tap <strong>✎ New story</strong> to start writing — it saves itself as you type." : "Nothing published yet.") + "</div>"
       return
     }
     $("list").innerHTML = items.map(function (s, i) {
-      var meta = (s.published ? "Published " : "Created ") + fmtDate(s.date)
-      var badge = !s.published && s.repo === SITE_REPO ? "<span class='badge' title='This draft is in the public repo (made in Pages CMS). Publishing works as usual.'>public repo</span>" : ""
-      return "<div class='story'><div class='story-main' data-i='" + i + "'><p class='story-title'>" + esc(s.title) + badge + "</p><div class='story-meta'>" + meta + "</div></div>" +
-        "<div class='story-actions'>" + (s.published ? "<a class='btn' target='_blank' rel='noopener' href='" + liveUrl(s.path) + "'>View</a>" : "") +
-        "<button class='btn' data-i='" + i + "'>Edit</button></div></div>"
+      var meta = (s.published ? "Published " : "Started ") + fmtDate(s.date)
+      var badge = !s.published && s.repo === SITE_REPO ? "<span class='badge' title='Made in Pages CMS; it sits in the public repo'>public repo</span>" : ""
+      return "<div class='story'><div class='story-main' data-open='" + i + "'><p class='story-title'>" + esc(s.title) + badge + "</p><div class='story-meta'>" + meta + "</div></div>" +
+        "<div class='story-actions'>" + (s.published ? "<a class='btn icon' title='View on site' target='_blank' rel='noopener' href='" + liveUrl(s.path) + "'>↗</a>" : "") +
+        "<button class='btn icon danger' title='Delete' data-del='" + i + "'>🗑</button></div></div>"
     }).join("")
-    Array.prototype.forEach.call($("list").querySelectorAll("[data-i]"), function (el) {
-      el.onclick = function () { openStory(items[+el.dataset.i]) }
-    })
+    Array.prototype.forEach.call($("list").querySelectorAll("[data-open]"), function (el) { el.onclick = function () { openStory(items[+el.dataset.open]) } })
+    Array.prototype.forEach.call($("list").querySelectorAll("[data-del]"), function (el) { el.onclick = function () { deleteFromList(items[+el.dataset.del]) } })
   }
-  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (t) {
-    t.onclick = function () { activeTab = t.dataset.tab; renderList() }
-  })
+  function deleteFromList(s) {
+    if (!confirm("Delete “" + s.title + "”?" + (s.published ? " It will disappear from your blog." : "") + " This can't be undone here.")) return
+    setStatus("Deleting…")
+    getFile(s.repo, s.path).then(function (f) {
+      if (!f) return
+      return deleteFile(s.repo, s.path, f.sha, "Delete: " + s.title)
+    }).then(function () {
+      lsDel("write:local:" + s.repo + "/" + s.path)
+      stories = stories.filter(function (x) { return x !== s })
+      renderList(); setStatus(""); toast("Deleted")
+    }).catch(fail)
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function (t) { t.onclick = function () { activeTab = t.dataset.tab; renderList() } })
   function goDash() {
-    if (!token) return openSettings()
-    location.hash = ""
+    if (!token) return route()
+    if (location.hash) history.replaceState(null, "", location.pathname)
     show("dash")
     loadStories().catch(fail)
   }
 
-  // ---------------------------------------------------------------- editor
+  // ================================================================ editor
   var editor = null
-  var cur = null      // { repo, path, sha, published, doc }
-  var dirty = false, busy = false
+  var cur = null          // { repo, path, sha, published, doc, notes }
+  var dirty = false, busy = false, autosaveTimer = null, localTimer = null
 
   function ensureEditor() {
     if (editor) return
@@ -426,40 +625,72 @@
       initialEditType: "wysiwyg",
       previewStyle: "tab",
       height: "auto",
-      minHeight: "60vh",
+      minHeight: "45vh",
       placeholder: "Tell your story…",
       usageStatistics: false,
+      hideModeSwitch: true,
+      toolbarItems: [],
       theme: dark ? "dark" : "light",
-      toolbarItems: [
-        [{ name: "insertImage", tooltip: "Insert image", el: toolBtn("🖼 Image", function () { pickFiles("image/*", insertFiles) }) },
-         { name: "attachFile", tooltip: "Attach a file (PDF, Word, slides…)", el: toolBtn("📎 Attach file", function () { pickFiles("", insertFiles) }) }],
-        ["heading", "bold", "italic", "strike"], ["quote", "hr"], ["ul", "ol"], ["link", "code", "codeblock", "table"]],
-      hooks: { addImageBlobHook: uploadImage },
-      events: { change: markDirty }
+      hooks: { addImageBlobHook: uploadImageHook },
+      events: { change: onChange }
     })
-    // Drag & drop / paste of non-image files (images are handled by the editor's own hook)
+    buildToolbar()
+    // drag & drop / paste of documents (images go through the editor's own image hook)
     var root = $("editor")
-    function nonImages(list) { return Array.prototype.filter.call(list || [], function (f) { return !/^image\//.test(f.type) }) }
-    root.addEventListener("drop", function (e) {
-      var files = nonImages(e.dataTransfer && e.dataTransfer.files)
-      if (!files.length) return
-      e.preventDefault(); e.stopPropagation()
-      insertFiles(files)
-    }, true)
-    root.addEventListener("paste", function (e) {
-      var files = nonImages(e.clipboardData && e.clipboardData.files)
-      if (!files.length) return
-      e.preventDefault(); e.stopPropagation()
-      insertFiles(files)
-    }, true)
+    function docs(list) { return Array.prototype.filter.call(list || [], function (f) { return !/^image\//.test(f.type) }) }
+    root.addEventListener("drop", function (e) { var f = docs(e.dataTransfer && e.dataTransfer.files); if (!f.length) return; e.preventDefault(); e.stopPropagation(); insertFiles(f) }, true)
+    root.addEventListener("paste", function (e) { var f = docs(e.clipboardData && e.clipboardData.files); if (!f.length) return; e.preventDefault(); e.stopPropagation(); insertFiles(f) }, true)
   }
 
-  function toolBtn(label, onClick) {
-    var b = document.createElement("button")
-    b.type = "button"; b.className = "tool-btn"; b.textContent = label
-    b.addEventListener("click", function (e) { e.preventDefault(); onClick() })
-    return b
+  // ---------- toolbar (always fully visible; scrolls sideways on small screens) ----------
+  function exec(cmd, payload) { return function () { editor.exec(cmd, payload); editor.focus() } }
+  var TOOLS = [
+    { html: "🖼 Image", title: "Insert image", pill: true, act: function () { pickFiles("image/*", insertFiles) } },
+    { html: "📎 File", title: "Attach a file (PDF, Word, slides…)", pill: true, act: function () { pickFiles("", insertFiles) } },
+    { html: "¹ Note", title: "Add a footnote here", pill: true, act: addFootnote },
+    "|",
+    { html: "H2", title: "Big heading", act: exec("heading", { level: 2 }) },
+    { html: "H3", title: "Small heading", act: exec("heading", { level: 3 }) },
+    { html: "<span class='b'>B</span>", title: "Bold", act: exec("bold") },
+    { html: "<span class='i'>I</span>", title: "Italic", act: exec("italic") },
+    { html: "<span class='s'>S</span>", title: "Strikethrough", act: exec("strike") },
+    "|",
+    { html: "❝", title: "Quote", act: exec("blockQuote") },
+    { html: "•", title: "Bullet list", act: exec("bulletList") },
+    { html: "1.", title: "Numbered list", act: exec("orderedList") },
+    { html: "☐", title: "Checklist", act: exec("taskList") },
+    "|",
+    { html: "🔗", title: "Link", act: addLink },
+    { html: "&lt;/&gt;", title: "Inline code", act: exec("code") },
+    { html: "{ }", title: "Code block", act: exec("codeBlock") },
+    { html: "▦", title: "Table", act: exec("addTable", { rowCount: 3, columnCount: 2 }) },
+    { html: "―", title: "Divider", act: exec("hr") },
+    "|",
+    { html: "↶", title: "Undo", act: exec("undo") },
+    { html: "↷", title: "Redo", act: exec("redo") }
+  ]
+  function buildToolbar() {
+    var bar = $("tools")
+    TOOLS.forEach(function (t) {
+      if (t === "|") { var s = document.createElement("span"); s.className = "tool-sep"; bar.appendChild(s); return }
+      var b = document.createElement("button")
+      b.type = "button"; b.className = "tool" + (t.pill ? " pill" : ""); b.innerHTML = t.html; b.title = t.title; b.setAttribute("aria-label", t.title)
+      b.addEventListener("mousedown", function (e) { e.preventDefault() })   // keep the cursor where it is in the text
+      b.addEventListener("click", function (e) { e.preventDefault(); try { t.act() } catch (err) { fail(err) } })
+      bar.appendChild(b)
+    })
   }
+  function addLink() {
+    var text = editor.getSelectedText ? editor.getSelectedText() : ""
+    var url = prompt("Link address (URL):", "https://")
+    if (!url || url === "https://") return
+    if (!/^[a-z]+:|^\/|^#/i.test(url)) url = "https://" + url
+    if (!text) text = prompt("Text to show:", url) || url
+    editor.exec("addLink", { linkUrl: url, linkText: text })
+    editor.focus()
+  }
+
+  // ---------- files & images ----------
   var picker = document.createElement("input")
   picker.type = "file"; picker.multiple = true; picker.style.display = "none"
   document.body.appendChild(picker)
@@ -468,39 +699,6 @@
     picker.onchange = function () { if (picker.files.length) cb(Array.prototype.slice.call(picker.files)) }
     picker.click()
   }
-  // Uploads each file, then inserts it at the cursor: images inline, everything else as a 📎 link.
-  function insertFiles(files) {
-    files.reduce(function (p, f) {
-      return p.then(function () {
-        return uploadAsset(f).then(function (a) {
-          if (a.isImage) editor.exec("addImage", { imageUrl: a.url, altText: a.alt })
-          else editor.exec("addLink", { linkUrl: a.url, linkText: "📎 " + f.name })
-          markDirty()
-        })
-      })
-    }, Promise.resolve()).then(function () { setStatus("Unsaved changes") }).catch(fail)
-  }
-  function markDirty() { if (!cur || cur.loading) return; dirty = true; setStatus("Unsaved changes"); autosave() }
-
-  function autosaveKey() { return "write:autosave:" + (cur && cur.path ? cur.repo + "/" + cur.path : "new") }
-  var autosaveTimer
-  function autosave() {
-    clearTimeout(autosaveTimer)
-    autosaveTimer = setTimeout(function () {
-      lsSet(autosaveKey(), JSON.stringify({ title: $("title").value, tags: cur.doc.tags, body: editor.getMarkdown(), at: Date.now() }))
-    }, 600)
-  }
-
-  // Images & files: uploaded to the public site repo (readers need to see them). While editing we show the
-  // raw GitHub URL (works instantly); the post stores the site path (/assets/…).
-  function toEditor(md) { return md.split("](" + SITE_ASSETS).join("](" + RAW_ASSETS) }
-  function fromEditor(md) {
-    return md.split("](" + RAW_ASSETS).join("](" + SITE_ASSETS)
-      // the rich editor escapes footnote definitions ("\[^1\]: note") — restore them so they work on the site
-      .replace(/^\\\[\^([^\]\n]+?)\\\]:/gm, "[^$1]:")
-      .replace(/\\\[\^([^\]\n]+?)\\\]/g, "[^$1]")
-  }
-  var MAX_MB = 25
   function uploadAsset(blob) {
     var isImage = /^image\//.test(blob.type || "")
     var extFromType = (blob.type.split("/")[1] || "bin").replace("jpeg", "jpg").replace(/[^a-z0-9]/gi, "")
@@ -510,83 +708,182 @@
     var dir = isImage ? IMAGES_DIR : FILES_DIR
     if (blob.size > MAX_MB * 1024 * 1024) return Promise.reject(new Error((blob.name || "File") + " is over " + MAX_MB + " MB — too big to upload here."))
     setStatus("Uploading " + (blob.name || name) + "…")
+    toast("Uploading " + esc(blob.name || name) + "…", 60000)
     return blob.arrayBuffer().then(function (buf) {
       return api(contentsPath(SITE_REPO, dir + "/" + name), { method: "PUT", body: { message: "Upload " + name, content: bytesToB64(new Uint8Array(buf)) } })
     }).then(function () {
+      $("toast").classList.add("hidden")
       return { url: RAW_ASSETS + dir.replace(/^assets\//, "") + "/" + name, alt: base.replace(/-/g, " "), isImage: isImage }
     })
   }
-  function uploadImage(blob, done) {
-    uploadAsset(blob).then(function (a) { done(a.url, a.alt); setStatus("Unsaved changes") }).catch(fail)
+  function uploadImageHook(blob, done) {
+    uploadAsset(blob).then(function (a) { done(a.url, a.alt); onChange() }).catch(fail)
     return false
   }
+  function insertFiles(files) {
+    files.reduce(function (p, f) {
+      return p.then(function () {
+        return uploadAsset(f).then(function (a) {
+          if (a.isImage) editor.exec("addImage", { imageUrl: a.url, altText: a.alt })
+          else editor.exec("addLink", { linkUrl: a.url, linkText: "📎 " + f.name })
+          onChange()
+        })
+      })
+    }, Promise.resolve()).catch(fail)
+  }
+  // While editing, show freshly uploaded files from GitHub directly (instant); posts store /assets/… paths.
+  function toEditor(md) { return md.split("](" + SITE_ASSETS).join("](" + RAW_ASSETS) }
+  function fromEditor(md) {
+    return md.split("](" + RAW_ASSETS).join("](" + SITE_ASSETS)
+      .replace(/\\\[\^([^\]\n\\]+?)\\\]/g, "[^$1]")   // the rich editor escapes footnote markers
+  }
 
+  // ---------- footnotes ----------
+  function usedIds() {
+    var md = editor.getMarkdown(), ids = {}, re = /\\?\[\^([^\]\s\\]+)\\?\]/g, m
+    while ((m = re.exec(md))) ids[m[1]] = true
+    return ids
+  }
+  function addFootnote() {
+    var used = usedIds()
+    cur.notes.forEach(function (n) { used[n.id] = true })
+    var id = 1; while (used[String(id)]) id++
+    id = String(id)
+    editor.insertText("[^" + id + "]")
+    cur.notes.push({ id: id, text: "" })
+    renderNotes()
+    onChange()
+    var ta = $("notes").querySelector("[data-note='" + id + "']")
+    if (ta) { ta.scrollIntoView({ behavior: "smooth", block: "center" }); ta.focus() }
+  }
+  function renderNotes() {
+    var used = editor ? usedIds() : {}
+    $("notes").innerHTML = cur.notes.map(function (n, i) {
+      return "<div class='note'><span class='note-num'>" + esc(n.id) + ".</span><textarea rows='2' data-note='" + esc(n.id) + "' data-i='" + i + "' placeholder='Footnote text'>" + esc(n.text) + "</textarea>" +
+        "<button class='note-del' title='Remove footnote' data-del='" + i + "'>×</button></div>" +
+        (used[n.id] ? "" : "<p class='note-warn'>Not used in your text — add [^" + esc(n.id) + "] where it should appear, or remove it.</p>")
+    }).join("")
+    $("notes-hint").classList.toggle("hidden", cur.notes.length > 0)
+    Array.prototype.forEach.call($("notes").querySelectorAll("textarea"), function (ta) {
+      ta.addEventListener("input", function () { cur.notes[+ta.dataset.i].text = ta.value; onChange() })
+    })
+    Array.prototype.forEach.call($("notes").querySelectorAll(".note-del"), function (b) {
+      b.onclick = function () {
+        var n = cur.notes[+b.dataset.del]
+        if (n.text.trim() && !confirm("Remove footnote " + n.id + "?")) return
+        cur.notes.splice(+b.dataset.del, 1)
+        var md = editor.getMarkdown().split("[^" + n.id + "]").join("").split("\\[^" + n.id + "\\]").join("")
+        editor.setMarkdown(md, false)
+        renderNotes(); onChange()
+      }
+    })
+  }
+  $("btn-add-note").onclick = function () { addFootnote() }
+
+  // ---------- title & tags ----------
   function renderTags() {
     Array.prototype.forEach.call($("tags").querySelectorAll(".chip"), function (c) { c.remove() })
     cur.doc.tags.forEach(function (t, i) {
       var c = document.createElement("span"); c.className = "chip"; c.textContent = t
-      var x = document.createElement("button"); x.textContent = "×"; x.title = "Remove tag"
-      x.onclick = function () { cur.doc.tags.splice(i, 1); renderTags(); markDirty() }
+      var x = document.createElement("button"); x.textContent = "×"; x.title = "Remove tag"; x.type = "button"
+      x.onclick = function () { cur.doc.tags.splice(i, 1); renderTags(); onChange() }
       c.appendChild(x); $("tags").insertBefore(c, $("tag-input"))
     })
   }
+  function commitTag(input) {
+    var v = input.value.trim().replace(/,+$/, "").trim()
+    if (v && cur.doc.tags.indexOf(v) < 0) { cur.doc.tags.push(v); renderTags(); onChange() }
+    input.value = ""
+  }
   $("tag-input").addEventListener("keydown", function (e) {
-    if (e.key === "Enter" || e.key === ",") {
-      e.preventDefault()
-      var v = this.value.trim().replace(/,$/, "")
-      if (v && cur.doc.tags.indexOf(v) < 0) { cur.doc.tags.push(v); renderTags(); markDirty() }
-      this.value = ""
-    } else if (e.key === "Backspace" && !this.value && cur.doc.tags.length) {
-      cur.doc.tags.pop(); renderTags(); markDirty()
-    }
+    if (e.key === "Enter" || e.key === ",") { e.preventDefault(); commitTag(this) }
+    else if (e.key === "Backspace" && !this.value && cur.doc.tags.length) { cur.doc.tags.pop(); renderTags(); onChange() }
   })
+  $("tag-input").addEventListener("input", function () { if (/,/.test(this.value)) commitTag(this) })   // phone keyboards
+  $("tag-input").addEventListener("blur", function () { if (this.value.trim()) commitTag(this) })
   function fitTitle() { var t = $("title"); t.style.height = "auto"; t.style.height = t.scrollHeight + "px" }
-  $("title").addEventListener("input", function () { fitTitle(); markDirty() })
+  $("title").addEventListener("input", function () { fitTitle(); onChange() })
   $("title").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); editor.focus() } })
+
+  // ---------- change tracking, local backup, auto-save ----------
+  function onChange() {
+    if (!cur || cur.loading) return
+    dirty = true
+    updateWordCount()
+    clearTimeout(localTimer); localTimer = setTimeout(saveLocal, 500)
+    if (!cur.published) {
+      setStatus("Editing…")
+      clearTimeout(autosaveTimer); autosaveTimer = setTimeout(autoSave, AUTOSAVE_MS)
+    } else setStatus("Unsaved — tap Update to publish changes")
+    if (cur.notes.length) { clearTimeout(onChange.nt); onChange.nt = setTimeout(refreshNoteWarnings, 800) }
+  }
+  function refreshNoteWarnings() {
+    if (document.activeElement && document.activeElement.dataset && document.activeElement.dataset.note) return
+    renderNotes()
+  }
+  function localKey() { return "write:local:" + (cur && cur.path ? cur.repo + "/" + cur.path : "new") }
+  function saveLocal() {
+    if (!cur || !editor) return
+    lsSet(localKey(), JSON.stringify({ title: $("title").value, tags: cur.doc.tags, body: editor.getMarkdown(), notes: cur.notes, at: Date.now() }))
+  }
+  function autoSave() {
+    if (!cur || cur.published || !dirty) return
+    if (busy) { autosaveTimer = setTimeout(autoSave, 2000); return }
+    var empty = !$("title").value.trim() && !editor.getMarkdown().trim()
+    if (empty) return
+    saveDraft(true).catch(fail)
+  }
+  function updateWordCount() {
+    var text = (editor.getMarkdown() || "").replace(/!\[[^\]]*\]\([^)]*\)/g, "").replace(/[#>*_`~\[\]()\-|]/g, " ")
+    var words = (text.match(/\S+/g) || []).length
+    $("wordcount").textContent = words ? words + " words · " + Math.max(1, Math.round(words / 220)) + " min read" : ""
+  }
 
   function updateEditButtons() {
     var pub = cur.published
-    $("btn-save").textContent = pub ? "Save changes" : "Save draft"
-    $("btn-publish").textContent = pub ? "Update" : "Publish"
-    $("btn-publish").classList.toggle("hidden", false)
+    $("btn-save").textContent = "Save"
     $("btn-save").classList.toggle("hidden", pub)
+    $("btn-publish").textContent = pub ? "Update" : "Publish"
     $("menu-unpublish").classList.toggle("hidden", !pub)
     $("menu-view").classList.toggle("hidden", !pub)
     if (pub) $("menu-view").href = liveUrl(cur.path)
     $("menu-delete").classList.toggle("hidden", !cur.path)
+    $("menu-mode").textContent = editor && editor.isMarkdownMode() ? "Switch to rich text" : "Switch to Markdown"
   }
 
-  function openEditor(state, md) {
+  function openEditor(state, body) {
     cur = state
     cur.loading = true
     show("edit")
     ensureEditor()
+    var split = splitNotes(body || "")
+    cur.notes = split.notes
     $("title").value = cur.doc.title
-    editor.setMarkdown(toEditor(md || ""), false)
-    renderTags()
-    fitTitle()
-    updateEditButtons()
-    // Offer to restore unsaved local changes
-    var saved = lsGet(autosaveKey())
+    editor.setMarkdown(toEditor(split.body), false)
+    renderTags(); renderNotes(); fitTitle()
+    // offer to restore unsaved local changes
+    var saved = lsGet(localKey())
     if (saved) {
       try {
         var a = JSON.parse(saved)
-        if (a.body !== editor.getMarkdown() || a.title !== cur.doc.title) {
+        if (a.body !== editor.getMarkdown() || a.title !== cur.doc.title || JSON.stringify(a.notes || []) !== JSON.stringify(cur.notes)) {
           if (confirm("You have unsaved changes to this story from " + new Date(a.at).toLocaleString() + ". Restore them?")) {
-            $("title").value = a.title; cur.doc.tags = a.tags || []; editor.setMarkdown(a.body, false); renderTags(); fitTitle()
-            setTimeout(function () { dirty = true; setStatus("Unsaved changes (restored)") }, 0)
-          } else lsDel(autosaveKey())
-        } else lsDel(autosaveKey())
-      } catch (e) { lsDel(autosaveKey()) }
+            $("title").value = a.title; cur.doc.tags = a.tags || []; cur.notes = a.notes || []
+            editor.setMarkdown(a.body, false); renderTags(); renderNotes(); fitTitle()
+            setTimeout(function () { onChange() }, 0)
+          } else lsDel(localKey())
+        } else lsDel(localKey())
+      } catch (e) { lsDel(localKey()) }
     }
-    setTimeout(function () { cur.loading = false }, 0)
+    updateEditButtons(); updateWordCount()
     dirty = false
-    setStatus(cur.path ? (cur.published ? "Published" : "Draft") : "New draft")
-    if (!cur.doc.title) $("title").focus()
+    setTimeout(function () { cur.loading = false }, 0)
+    setStatus(cur.path ? (cur.published ? "Published" : "Draft · private") : "New draft · private")
+    if (!cur.doc.title) setTimeout(function () { $("title").focus() }, 50)
+    window.scrollTo(0, 0)
   }
-
   function newStory() {
-    location.hash = "#new"
+    history.replaceState(null, "", "#new")
     openEditor({ repo: DRAFT_REPO, path: null, sha: null, published: false, doc: { title: "", published: false, tags: [], extra: [], body: "" } }, "")
   }
   function openStory(s) {
@@ -594,142 +891,171 @@
     getFile(s.repo, s.path).then(function (f) {
       if (!f) throw new Error("That story no longer exists.")
       var doc = parseDoc(f.text)
-      location.hash = "#" + s.repo + "/" + s.path
+      history.replaceState(null, "", "#" + s.repo + "/" + s.path)
       openEditor({ repo: s.repo, path: s.path, sha: f.sha, published: s.repo === SITE_REPO && doc.published !== false, doc: doc }, doc.body)
     }).catch(fail)
   }
 
   function collect() {
     cur.doc.title = $("title").value.trim()
-    cur.doc.body = fromEditor(editor.getMarkdown())
+    var split = splitNotes(fromEditor(editor.getMarkdown()))   // also catches footnotes typed by hand
+    split.notes.forEach(function (n) { if (!cur.notes.some(function (x) { return x.id === n.id })) cur.notes.push(n) })
+    cur.doc.body = joinNotes(split.body, cur.notes)
     return cur.doc
   }
   function uniquePath(repo, base) {
-    // base like _posts/2026-11-05-my-title ; returns first free path
     function tryN(n) {
       var p = base + (n > 1 ? "-" + n : "") + ".md"
       return getFile(repo, p).then(function (f) { return f ? tryN(n + 1) : p })
     }
     return tryN(1)
   }
-  function guard(fn) {
-    return function () {
-      if (busy) return
-      busy = true
-      Array.prototype.forEach.call(document.querySelectorAll("#edit-actions .btn"), function (b) { b.disabled = true })
-      $("more-menu").classList.add("hidden")
-      Promise.resolve().then(fn).catch(fail).then(function () {
-        busy = false
-        Array.prototype.forEach.call(document.querySelectorAll("#edit-actions .btn"), function (b) { b.disabled = false })
-      })
-    }
+  function withBusy(fn) {
+    if (busy) return Promise.resolve()
+    busy = true
+    var btns = document.querySelectorAll("#edit-actions .btn")
+    Array.prototype.forEach.call(btns, function (b) { b.disabled = true })
+    hideMenu()
+    return Promise.resolve().then(fn).then(function (r) { done(); return r }, function (e) { done(); throw e })
+    function done() { busy = false; Array.prototype.forEach.call(btns, function (b) { b.disabled = false }) }
   }
-  function saved(msg) {
-    lsDel("write:autosave:new"); lsDel(autosaveKey())
+  function afterSave(statusText) {
+    lsDel("write:local:new"); lsDel(localKey())
     dirty = false
-    setStatus(msg)
+    setStatus(statusText)
     updateEditButtons()
-    location.hash = "#" + cur.repo + "/" + cur.path
+    history.replaceState(null, "", "#" + cur.repo + "/" + cur.path)
   }
 
-  // Save draft (or save changes to a published post)
-  $("btn-save").onclick = guard(function () {
-    var doc = collect()
-    if (!doc.title && !doc.body.trim()) { toast("Write something first"); return }
-    setStatus("Saving…")
-    var pathP = cur.path ? Promise.resolve(cur.path) : uniquePath(cur.repo, POSTS_DIR + "/" + today() + "-" + slugify(doc.title))
-    return pathP.then(function (path) {
-      return putFile(cur.repo, path, serializeDoc(doc, cur.published), cur.sha, (cur.sha ? "Update" : "Create") + (cur.published ? " post: " : " draft: ") + (doc.title || "Untitled"))
-        .then(function (sha) { cur.path = path; cur.sha = sha; saved(cur.published ? "Saved · live in ~1 min" : "Draft saved (private)"); toast(cur.published ? "Saved. The site updates in about a minute." : "Draft saved — only you can see it.") })
-    })
-  })
-
-  // Publish (or update a published post)
-  $("btn-publish").onclick = guard(function () {
-    var doc = collect()
-    if (!doc.title) { toast("Add a title before publishing"); $("title").focus(); return }
-    if (!doc.body.trim()) { toast("Write something before publishing"); return }
-    if (!cur.published && !confirm("Publish “" + doc.title + "” to " + SITE_URL + "? Anyone will be able to read it.")) return
-    setStatus(cur.published ? "Updating…" : "Publishing…")
-
-    // Already in the public repo: update in place
-    if (cur.repo === SITE_REPO) {
-      var wasPublished = cur.published
-      return putFile(SITE_REPO, cur.path, serializeDoc(doc, true), cur.sha, (wasPublished ? "Update post: " : "Publish post: ") + doc.title).then(function (sha) {
-        cur.sha = sha; cur.published = true
-        saved("Published")
-        toast((wasPublished ? "Updated" : "Published") + "! Live in about a minute — <a target='_blank' rel='noopener' href='" + liveUrl(cur.path) + "'>view</a>", 8000)
-      })
-    }
-    // A private draft (or brand-new story): copy into the public repo dated today, then remove the draft
-    var oldPath = cur.path, oldSha = cur.sha
-    return uniquePath(SITE_REPO, POSTS_DIR + "/" + today() + "-" + slugify(doc.title)).then(function (path) {
-      return putFile(SITE_REPO, path, serializeDoc(doc, true), null, "Publish post: " + doc.title).then(function (sha) {
-        var cleanup = oldPath ? deleteFile(DRAFT_REPO, oldPath, oldSha, "Published: " + doc.title).catch(function () {}) : Promise.resolve()
-        return cleanup.then(function () {
-          lsDel("write:autosave:" + DRAFT_REPO + "/" + oldPath)
-          cur.repo = SITE_REPO; cur.path = path; cur.sha = sha; cur.published = true
-          saved("Published")
-          toast("Published! Live in about a minute — <a target='_blank' rel='noopener' href='" + liveUrl(path) + "'>view</a>", 8000)
+  // Save draft (private). Called by the Save button and by auto-save.
+  function saveDraft(silent) {
+    clearTimeout(autosaveTimer)
+    return withBusy(function () {
+      var doc = collect()
+      if (!doc.title && !doc.body.trim()) { if (!silent) toast("Write something first"); return }
+      setStatus("Saving…")
+      var pathP = cur.path ? Promise.resolve(cur.path) : uniquePath(cur.repo, POSTS_DIR + "/" + today() + "-" + slugify(doc.title))
+      return pathP.then(function (path) {
+        var oldKey = localKey()
+        return putFile(cur.repo, path, serializeDoc(doc, false), cur.sha, (cur.sha ? "Update" : "Create") + " draft: " + (doc.title || "Untitled")).then(function (sha) {
+          lsDel(oldKey)
+          cur.path = path; cur.sha = sha
+          afterSave("Saved to drafts · " + fmtTime(new Date()))
+          if (!silent) toast("Saved — only you can see this draft.")
         })
       })
     })
-  })
+  }
+  $("btn-save").onclick = function () { saveDraft(false).catch(fail) }
 
-  // Unpublish: move back to the private drafts repo
-  $("menu-unpublish").onclick = guard(function () {
-    if (!confirm("Unpublish this story? It will be removed from the site and moved back to your private drafts.")) return
-    var doc = collect()
-    setStatus("Unpublishing…")
-    var name = cur.path.split("/").pop()
-    var draftPath = POSTS_DIR + "/" + name
-    return getFile(DRAFT_REPO, draftPath).then(function (existing) {
-      return putFile(DRAFT_REPO, draftPath, serializeDoc(doc, false), existing && existing.sha, "Unpublished: " + doc.title)
-    }).then(function (sha) {
-      return deleteFile(SITE_REPO, cur.path, cur.sha, "Unpublish post: " + doc.title).then(function () {
-        cur.repo = DRAFT_REPO; cur.path = draftPath; cur.sha = sha; cur.published = false
-        saved("Draft (private)")
-        toast("Unpublished — it's a private draft again.")
+  $("btn-publish").onclick = function () {
+    clearTimeout(autosaveTimer)
+    withBusy(function () {
+      var doc = collect()
+      if (!doc.title) { toast("Add a title before publishing"); $("title").focus(); return }
+      if (!splitNotes(doc.body).body.trim()) { toast("Write something before publishing"); return }
+      if (!cur.published && !confirm("Publish “" + doc.title + "” on your blog? Anyone will be able to read it.")) return
+      setStatus(cur.published ? "Updating…" : "Publishing…")
+      if (cur.repo === SITE_REPO) {
+        var was = cur.published
+        return putFile(SITE_REPO, cur.path, serializeDoc(doc, true), cur.sha, (was ? "Update post: " : "Publish post: ") + doc.title).then(function (sha) {
+          cur.sha = sha; cur.published = true
+          afterSave("Published")
+          toast((was ? "Updated" : "Published") + "! Live in about a minute — <a target='_blank' rel='noopener' href='" + liveUrl(cur.path) + "'>view</a>", 9000)
+        })
+      }
+      var oldPath = cur.path, oldSha = cur.sha, oldKey = localKey()
+      return uniquePath(SITE_REPO, POSTS_DIR + "/" + today() + "-" + slugify(doc.title)).then(function (path) {
+        return putFile(SITE_REPO, path, serializeDoc(doc, true), null, "Publish post: " + doc.title).then(function (sha) {
+          var cleanup = oldPath ? deleteFile(DRAFT_REPO, oldPath, oldSha, "Published: " + doc.title).catch(function () {}) : Promise.resolve()
+          return cleanup.then(function () {
+            lsDel(oldKey)
+            cur.repo = SITE_REPO; cur.path = path; cur.sha = sha; cur.published = true
+            afterSave("Published")
+            toast("Published! Live in about a minute — <a target='_blank' rel='noopener' href='" + liveUrl(path) + "'>view</a>", 9000)
+          })
+        })
       })
-    })
-  })
+    }).catch(fail)
+  }
 
-  $("menu-delete").onclick = guard(function () {
-    if (!cur.path) return
-    if (!confirm("Delete “" + ($("title").value || "Untitled") + "” permanently" + (cur.published ? " (it will also disappear from the site)" : "") + "?")) return
-    setStatus("Deleting…")
-    return deleteFile(cur.repo, cur.path, cur.sha, "Delete: " + ($("title").value || cur.path)).then(function () {
-      lsDel(autosaveKey()); dirty = false; toast("Deleted"); goDash()
-    })
-  })
+  $("menu-unpublish").onclick = function () {
+    withBusy(function () {
+      if (!confirm("Unpublish? It will be removed from your blog and become a private draft again.")) return
+      var doc = collect()
+      setStatus("Unpublishing…")
+      var draftPath = POSTS_DIR + "/" + cur.path.split("/").pop()
+      return getFile(DRAFT_REPO, draftPath).then(function (existing) {
+        return putFile(DRAFT_REPO, draftPath, serializeDoc(doc, false), existing && existing.sha, "Unpublished: " + doc.title)
+      }).then(function (sha) {
+        return deleteFile(SITE_REPO, cur.path, cur.sha, "Unpublish post: " + doc.title).then(function () {
+          lsDel(localKey())
+          cur.repo = DRAFT_REPO; cur.path = draftPath; cur.sha = sha; cur.published = false
+          afterSave("Draft · private")
+          toast("Unpublished — it's a private draft again.")
+        })
+      })
+    }).catch(fail)
+  }
+  $("menu-delete").onclick = function () {
+    withBusy(function () {
+      if (!cur.path) return
+      if (!confirm("Delete “" + ($("title").value || "Untitled") + "”?" + (cur.published ? " It will disappear from your blog." : ""))) return
+      setStatus("Deleting…")
+      return deleteFile(cur.repo, cur.path, cur.sha, "Delete: " + ($("title").value || cur.path)).then(function () {
+        lsDel(localKey()); dirty = false; toast("Deleted"); goDash()
+      })
+    }).catch(fail)
+  }
+  $("menu-mode").onclick = function () {
+    hideMenu()
+    editor.changeMode(editor.isMarkdownMode() ? "wysiwyg" : "markdown")
+    updateEditButtons()
+  }
 
+  function hideMenu() { $("more-menu").classList.add("hidden") }
   $("btn-more").onclick = function (e) { e.stopPropagation(); $("more-menu").classList.toggle("hidden") }
-  document.addEventListener("click", function () { $("more-menu").classList.add("hidden") })
+  $("more-menu").addEventListener("click", function (e) { e.stopPropagation() })
+  document.addEventListener("click", hideMenu)
 
-  // Ctrl/Cmd+S saves
   document.addEventListener("keydown", function (e) {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s" && !$("view-edit").classList.contains("hidden")) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s" && document.body.dataset.view === "edit") {
       e.preventDefault(); (cur.published ? $("btn-publish") : $("btn-save")).click()
     }
   })
 
   function leaveEditor() {
-    if (dirty && !confirm("You have unsaved changes. Leave anyway? (They're kept in this browser and offered next time.)")) return false
-    goDash(); return true
+    if (dirty && !cur.published && ($("title").value.trim() || editor.getMarkdown().trim())) {
+      saveDraft(true).then(goDash).catch(fail)   // drafts: save automatically on the way out
+      return
+    }
+    if (dirty && cur.published && !confirm("You have changes that aren't published yet. Leave anyway? (They're kept on this device.)")) return
+    goDash()
   }
-  $("brand").onclick = function (e) { e.preventDefault(); if ($("view-edit").classList.contains("hidden")) goDash(); else leaveEditor() }
+  $("brand").onclick = function (e) { e.preventDefault(); if (document.body.dataset.view === "edit") leaveEditor(); else if (token) goDash() }
   $("btn-new").onclick = newStory
-  window.addEventListener("beforeunload", function (e) { if (dirty) { e.preventDefault(); e.returnValue = "" } })
+  window.addEventListener("beforeunload", function (e) { if (dirty) { saveLocal(); e.preventDefault(); e.returnValue = "" } })
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden" && dirty && cur) { saveLocal(); if (!cur.published) autoSave() }
+  })
 
-  // ---------------------------------------------------------------- start
-  window.__write = { parseDoc: parseDoc, serializeDoc: serializeDoc, slugify: slugify, b64enc: b64enc, b64dec: b64dec, toEditor: toEditor, fromEditor: fromEditor, editor: function () { return editor }, insertFiles: function (f) { return insertFiles(f) } }
-  if (!token) openSettings()
-  else if (location.hash === "#new") newStory()
-  else if (/^#.+\/_posts\//.test(location.hash)) {
-    var h = decodeURIComponent(location.hash.slice(1)), i = h.indexOf("/")
-    show("dash"); openStory({ repo: h.slice(0, i), path: h.slice(i + 1) })
+  // ================================================================ start
+  function route() {
+    var legacy = lsGet("write:token")
+    if (legacy) { lsDel("write:token"); return openSetup(legacy) }   // old unprotected token: move it into a passcode vault
+    if (!lsGet("write:vault")) return openSetup()
+    if (!token && !restoreSession()) return lock()
+    var h = location.hash
+    if (h === "#new") newStory()
+    else if (/^#.+\/_posts\//.test(h)) {
+      var p = decodeURIComponent(h.slice(1)), i = p.indexOf("/")
+      show("dash"); openStory({ repo: p.slice(0, i), path: p.slice(i + 1) })
+    }
+    else goDash()
   }
-  else goDash()
+  window.__write = { parseDoc: parseDoc, serializeDoc: serializeDoc, splitNotes: splitNotes, joinNotes: joinNotes, slugify: slugify, fromEditor: fromEditor, toEditor: toEditor,
+    editor: function () { return editor }, cur: function () { return cur }, collect: function () { return collect() }, insertFiles: function (f) { return insertFiles(f) }, addFootnote: function () { addFootnote() }, sealToken: sealToken, openVault: openVault }
+  route()
 })()
 </script>
 </body>

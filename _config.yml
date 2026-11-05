@@ -22,9 +22,6 @@ nav:
   - title: instagram
     url: https://www.instagram.com/chirag_9.34/
     external: true
-  - title: resume
-    url: /resume.pdf
-    newtab: true
 
 
 # ---------------------------------------------------------------
