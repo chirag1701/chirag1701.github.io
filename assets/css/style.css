@@ -1,0 +1,203 @@
+/* ==========================================================
+   Typography base (Typography.js "Wordpress 2016"-style scale)
+   ========================================================== */
+html { font: 100%/1.75 Merriweather, Georgia, serif; box-sizing: border-box; overflow-y: scroll; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.9);
+  font-family: Merriweather, Georgia, serif;
+  font-weight: 400;
+  word-wrap: break-word;
+  font-kerning: normal;
+  font-feature-settings: "kern", "liga", "clig", "calt";
+}
+img { max-width: 100%; margin: 0 0 1.75rem; padding: 0; border-style: none; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 3.5rem 0 1.75rem; padding: 0; color: inherit;
+  font-family: Merriweather, Georgia, serif; font-weight: 900;
+  text-rendering: optimizeLegibility; line-height: 1.1;
+}
+h1 { font-family: Montserrat, sans-serif; font-size: 2.5rem; }
+h2 { font-size: 1.73286rem; margin-top: 1.5rem; }
+h3 { font-size: 1.4427rem; margin-top: 1.5rem; }
+h4 { font-size: 1rem; letter-spacing: 0.140625em; text-transform: uppercase; }
+h5 { font-size: 0.83255rem; }
+h6 { font-size: 0.75966rem; font-style: italic; }
+
+p, figure, dl, dd, form, table, fieldset, address, iframe, noscript { margin: 0 0 1.75rem; padding: 0; }
+ul, ol { margin: 0 0 1.75rem 0; padding: 0; }
+ul { list-style: disc; }
+ol { list-style-position: outside; }
+li { margin-bottom: 0.875rem; }
+ol li, ul li { margin-left: 20px; padding-left: 10px; }
+li > ol, li > ul { margin-left: 1.75rem; margin-bottom: 0.875rem; margin-top: 0.875rem; }
+li > p { margin-bottom: 0.875rem; }
+li *:last-child, p *:last-child, blockquote *:last-child { margin-bottom: 0; }
+b, strong, dt, th { font-weight: 700; }
+
+blockquote {
+  margin: 0 0 1.75rem; padding: 0 0 0 1.42188rem;
+  font-size: 1rem; line-height: 1.75rem; font-style: normal;
+  color: darkslategrey;
+  border-left: 0.32813rem solid rgba(0, 0, 0, 0.9);
+}
+blockquote > :last-child { margin-bottom: 0; }
+
+hr { margin: 0 0 calc(1.75rem - 1px); padding: 0; background: rgba(0, 0, 0, 0.2); border: none; height: 1px; }
+
+table { font-size: 1rem; line-height: 1.75rem; border-collapse: collapse; width: 100%; }
+thead { text-align: left; }
+td, th { text-align: left; border-bottom: 1px solid rgba(0, 0, 0, 0.12); font-feature-settings: "tnum"; padding: 0.875rem 1.16667rem calc(0.875rem - 1px); }
+th:first-child, td:first-child { padding-left: 0; }
+th:last-child, td:last-child { padding-right: 0; }
+
+abbr[title] { border-bottom: 1px dotted rgba(0, 0, 0, 0.5); cursor: help; text-decoration: none; }
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+mark, ins { background: #007acc; color: white; padding: 0.10938rem 0.21875rem; text-decoration: none; }
+details { margin-bottom: 20px; }
+
+/* Links: underline drawn with a box-shadow, like the original */
+a { color: #007acc; text-decoration: none; box-shadow: 0 1px 0 0 currentColor; background-color: transparent; }
+a:hover, a:active { box-shadow: none; }
+
+/* ==========================================================
+   Code
+   ========================================================== */
+code, kbd, pre, samp { font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace; }
+code {
+  background: #f6f8fa; border: 1px solid #e1e4e8; border-radius: 4px; color: #1f2933;
+  font-size: 0.95em; padding: 0.15em 0.4em;
+}
+pre {
+  background: #f6f8fa; border: 1px solid #e1e4e8; border-radius: 6px; color: #1f2933;
+  font-size: 0.95rem; line-height: 1.55; overflow-x: auto;
+  margin: 0 0 1.75rem; padding: 0.85rem 1.1rem 1.1rem;
+}
+pre code { background: transparent; border: 0; color: inherit; padding: 0; font-size: inherit; }
+
+/* Rouge highlighting — "Tomorrow Night" palette, matching the original's Prism theme */
+div.highlight, figure.highlight { background: none; margin: 0; }
+.highlight pre.highlight, div.highlight pre, figure.highlight pre { background: #2d2d2d; border-color: #2d2d2d; color: #ccc; }
+.highlight .c, .highlight .c1, .highlight .cm, .highlight .cs, .highlight .cp, .highlight .cd { color: #999; }
+.highlight .p, .highlight .pi { color: #ccc; }
+.highlight .nt, .highlight .na, .highlight .nn, .highlight .gd { color: #e2777a; }
+.highlight .nf, .highlight .fm { color: #f08d49; }
+.highlight .nb, .highlight .bp, .highlight .nc, .highlight .no, .highlight .kt, .highlight .m, .highlight .mi, .highlight .mf, .highlight .mh, .highlight .il { color: #f08d49; }
+.highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kc, .highlight .ow { color: #cc99cd; }
+.highlight .s, .highlight .s1, .highlight .s2, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .se, .highlight .sh, .highlight .si, .highlight .sx, .highlight .sr, .highlight .ss, .highlight .gi { color: #7ec699; }
+.highlight .o, .highlight .nv, .highlight .vi, .highlight .vg, .highlight .vc { color: #67cdcc; }
+.highlight .nd, .highlight .ne { color: #f8c555; }
+.highlight .gh, .highlight .gu, .highlight .gs { font-weight: bold; }
+.highlight .ge { font-style: italic; }
+
+/* ==========================================================
+   Layout
+   ========================================================== */
+.site { margin-left: auto; margin-right: auto; max-width: 42rem; padding: 2.625rem 1.3125rem; }
+.site-header { align-items: baseline; display: flex; flex-wrap: wrap; gap: 0.875rem; width: 100%; }
+.site-title { font-size: 3.95285rem; line-height: 4.375rem; margin-bottom: 0.875rem; margin-top: 0; }
+.site-title-small { font-family: Montserrat, sans-serif; margin-top: 0; }
+.home-link { box-shadow: none; color: inherit; }
+.post-header-meta { margin: 0 0 0 auto; text-align: right; }
+.post-header-meta .post-meta { margin-bottom: 0; }
+
+.post-meta { color: rgba(0, 0, 0, 0.6); font-size: 0.9rem; font-family: inherit; line-height: 1.4; margin: 0 0 0.5rem; }
+
+.discussion-links { display: inline-flex; align-items: center; gap: 0.35rem; list-style: none; margin: 0 0 0 0.5rem; padding: 0; vertical-align: middle; }
+.discussion-links li { margin: 0; padding: 0; }
+.discussion-links a { display: flex; align-items: center; justify-content: center; width: 1.25rem; height: 1.25rem; box-shadow: none; }
+.discussion-links svg { width: 1rem; height: 1rem; fill: currentColor; }
+.discussion-links a:hover, .discussion-links a:focus { outline: 1px solid currentColor; outline-offset: 2px; border-radius: 2px; }
+
+.related-preview { border-left: 4px solid #d9d9d9; margin-top: 0.875rem; margin-bottom: 0.875rem; padding-left: 0.875rem; }
+
+/* Search */
+.search-container { margin: 3.5rem 0 2.5rem; padding: 0.75rem 0 0; }
+.site-search { display: flex; align-items: center; gap: 0.6rem; margin: 0; }
+.site-search input { flex: 1 1 0%; min-width: 0; font: inherit; font-size: 1rem; padding: 0.5rem 0.75rem; border: 1px solid #bdbdbd; border-radius: 5px; background: #fff; color: #000; }
+.site-search button { font: inherit; padding: 0.55rem 1.1rem; font-size: 0.95rem; background: #1a73e8; color: #fff; border: none; border-radius: 4px; cursor: pointer; transition: background 120ms ease-in-out; }
+.site-search button:hover, .site-search button:focus { background: #1558b0; }
+.site-search input:focus, .site-search button:focus { outline: 2px solid #1a73e8; outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* Tag cloud */
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin: 1rem 0 2rem; align-items: center; }
+.tag-cloud__link { display: inline-flex; align-items: baseline; gap: 0.3rem; line-height: 1.1; font-weight: 600; box-shadow: none; transition: transform 120ms ease-in-out; }
+.tag-cloud__link:hover, .tag-cloud__link:focus { transform: translateY(-1px); }
+.tag-cloud__count { font-size: 0.7em; color: rgba(0, 0, 0, 0.6); }
+
+/* ==========================================================
+   Sidenotes (footnotes float into the right margin on wide screens)
+   ========================================================== */
+.post-body { position: relative; }
+.sidenotes { display: none; }
+.sidenote {
+  position: absolute; left: 0; right: 0;
+  font-size: 0.85rem; line-height: 1.55; color: rgba(0, 0, 0, 0.62);
+  border-left: 2px solid transparent; padding-left: 0.6rem; margin-left: -0.6rem;
+  transition: border-color 120ms ease-in-out, color 120ms ease-in-out;
+}
+.sidenote p { margin: 0 0 0.5em; }
+.sidenote p:last-child { margin-bottom: 0; }
+.sidenote__label { float: left; font-weight: 600; margin-right: 0.4em; }
+.sidenote__label::after { content: "."; }
+.sidenote.is-active { border-left-color: #1a73e8; color: rgba(0, 0, 0, 0.9); }
+.has-sidenotes .footnote { box-shadow: none; transition: background-color 120ms ease-in-out; border-radius: 2px; padding: 0 1px; }
+.has-sidenotes .footnote.is-active { background-color: rgba(26, 115, 232, 0.15); }
+.footnotes { font-size: 0.9rem; }
+
+@media (min-width: 640px) {
+  .sidenotes { display: block; position: absolute; top: 0; }
+  .has-sidenotes .footnotes { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+}
+@media (min-width: 640px) and (max-width: 1149.98px) {
+  .has-footnotes {
+    --sidenote-gap: 1.25rem;
+    --sidenote-width: clamp(9rem, 26vw, 15rem);
+    max-width: calc(42rem + var(--sidenote-gap) + var(--sidenote-width));
+    padding-right: calc(1.3125rem + var(--sidenote-gap) + var(--sidenote-width));
+  }
+  .sidenotes { left: calc(100% + var(--sidenote-gap)); width: var(--sidenote-width); }
+  .has-footnotes .sidenote { font-size: 0.8rem; line-height: 1.5; }
+}
+@media (min-width: 1150px) {
+  .sidenotes { left: calc(100% + 2.5rem); width: min(15rem, calc(50vw - 50% - 4rem)); }
+}
+
+/* ==========================================================
+   Small screens
+   ========================================================== */
+@media only screen and (max-width: 480px) {
+  .site-title { font-size: 2.6rem; line-height: 3rem; }
+  ul, ol { margin-left: 0; }
+  blockquote { margin-left: 0; padding-left: 0.98438rem; }
+  .post-header-meta { margin-left: 0; text-align: left; }
+}
+
+/* ==========================================================
+   Colour schemes — follows the visitor's OS setting
+   ========================================================== */
+@media (prefers-color-scheme: light) {
+  body { background-color: #f0efef; color: black; }
+}
+@media (prefers-color-scheme: dark) {
+  body { background-color: #222; color: lightgrey; }
+  a { color: lightblue; }
+  hr { background: rgba(255, 255, 255, 0.15); }
+  blockquote { color: grey; border-left-color: rgba(255, 255, 255, 0.35); }
+  .related-preview { border-left-color: #555; }
+  pre, code { background: #1e1e1e; border-color: #3a3a3a; color: #f5f5f5; }
+  td, th { border-bottom-color: rgba(255, 255, 255, 0.12); }
+  .post-meta, .tag-cloud__count { color: rgba(255, 255, 255, 0.7); }
+  .site-search input { background: #1e1e1e; border-color: #3d3d3d; color: lightgrey; }
+  .site-search button { background: #3d7bf6; }
+  .site-search button:hover, .site-search button:focus { background: #2f64c4; }
+  .site-search input:focus, .site-search button:focus { outline-color: #3d7bf6; }
+  .sidenote { color: rgba(255, 255, 255, 0.55); }
+  .sidenote.is-active { border-left-color: lightblue; color: rgba(255, 255, 255, 0.85); }
+  .has-sidenotes .footnote.is-active { background-color: rgba(173, 216, 230, 0.2); }
+}

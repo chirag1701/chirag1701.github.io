@@ -1,0 +1,65 @@
+# ---------------------------------------------------------------
+# Site settings — edit these to make the site yours
+# ---------------------------------------------------------------
+title: chirag sindhwani            # shown as the big header (lowercase, like the original)
+author: Chirag Sindhwani
+description: Chirag Sindhwani's blog — notes on software, engineering and whatever else I'm thinking about.
+
+# If your repo is named <username>.github.io, leave baseurl empty.
+# If it's any other repo name (e.g. "blog"), set baseurl: "/blog".
+url: "https://chirag1701.github.io"
+baseurl: ""
+
+# Links shown in the "subscribe │ about │ popular │ tags │ rss" row.
+# External links open in a new tab. Remove or add entries freely.
+nav:
+  # Got a newsletter later? Add it back like this:
+  # - title: subscribe
+  #   url: https://buttondown.com/your-newsletter
+  #   external: true
+  - title: github
+    url: https://github.com/chirag1701
+    external: true
+  - title: about
+    url: /about/
+  - title: popular
+    url: /popular/
+  - title: tags
+    url: /tags/
+  - title: rss
+    url: /rss.xml
+
+# Used for the "If you liked this post…" line at the end of every post.
+subscribe_url: ""   # put your newsletter URL here to add "consider subscribing" to every post
+
+# How many posts to show under "popular" on the homepage
+popular_on_home: 3
+
+# ---------------------------------------------------------------
+# Build settings (you normally don't need to touch these)
+# ---------------------------------------------------------------
+permalink: /:title/
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  footnote_backlink: "↩"
+
+paginate: 20
+paginate_path: "/page/:num/"
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-paginate
+  - jekyll-sitemap
+
+feed:
+  path: rss.xml
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor

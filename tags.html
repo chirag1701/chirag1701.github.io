@@ -1,0 +1,14 @@
+---
+layout: page
+title: Tags
+permalink: /tags/
+---
+{%- assign tags = site.tags | sort -%}
+<div class="tag-cloud">
+{%- for tag in tags %}<a class="tag-cloud__link" href="#{{ tag[0] | slugify }}" style="font-size:{{ tag[1].size | times: 0.12 | plus: 0.9 | at_most: 2 }}rem">{{ tag[0] }}<span class="tag-cloud__count">{{ tag[1].size }}</span></a>{% endfor %}
+</div>
+
+{% for tag in tags %}
+<h2 id="{{ tag[0] | slugify }}">{{ tag[0] }}</h2>
+{% for post in tag[1] %}<article><header><h3 style="margin-bottom:0.4375rem"><a style="box-shadow:none" href="{{ post.url | relative_url }}">{{ post.title }}</a></h3></header>{% include post-meta.html post=post %}</article>{% endfor %}
+{% endfor %}

@@ -1,0 +1,30 @@
+---
+layout: default
+---
+<header class="site-header"><h3 class="site-title-small"><a class="home-link" href="{{ '/' | relative_url }}">{{ site.title }}</a></h3><div class="post-header-meta">{% include post-meta.html post=page %}</div></header>
+<main><article>
+<header><h1 style="margin-top:1.75rem;margin-bottom:20px">{{ page.title }}</h1></header>
+<div class="post-body"><section>
+{{ content }}
+</section></div>
+
+<hr style="margin-bottom:1.75rem">
+<p>If you liked this post{% if site.subscribe_url and site.subscribe_url != "" %}, consider <a href="{{ site.subscribe_url }}" target="_blank" rel="noopener">subscribing</a> to email updates about my new posts, or{% else %}, consider{% endif %} <a href="https://news.ycombinator.com/submitlink?u={{ page.url | absolute_url | url_encode }}&amp;t={{ page.title | url_encode }}" target="_blank" rel="noopener">sharing it on Hacker News</a>.</p>
+
+{%- assign related = nil -%}
+{%- for p in site.posts -%}
+  {%- if related == nil and p.url != page.url -%}
+    {%- for t in p.tags -%}
+      {%- if page.tags contains t -%}{%- assign related = p -%}{%- break -%}{%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if related %}
+<p>Here's a preview of a related post that shares tags with this one.</p>
+<blockquote class="related-preview"><p style="font-weight:600;margin-bottom:0.4375rem;margin-top:0">{{ related.title }}</p><div>{{ related.excerpt | remove: '</p>' }}<br><a href="{{ related.url | relative_url }}">Continue reading...</a></p></div></blockquote>
+{%- endif %}
+
+<hr style="margin-bottom:1.75rem">
+{% include nav.html %}
+</article></main>
+<script src="{{ '/assets/js/sidenotes.js' | relative_url }}" defer></script>

@@ -1,0 +1,12 @@
+---
+layout: default
+---
+<header class="site-header"><h3 class="site-title-small"><a class="home-link" href="{{ '/' | relative_url }}">{{ site.title }}</a></h3></header>
+<main><article>
+<header><h1 style="margin-top:1.75rem;margin-bottom:20px">{{ page.title }}</h1></header>
+<div class="post-body">
+{{ content }}
+</div>
+<hr style="margin-bottom:1.75rem">
+{% include nav.html %}
+</article></main>
