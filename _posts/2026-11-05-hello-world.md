@@ -2,7 +2,6 @@
 title: Hello, world
 tags:
   - life
-popular: false
 ---
 This is the first post on my new blog. I've wanted a place to write things down for a while, somewhere that isn't a social feed and doesn't care about engagement.
 

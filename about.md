@@ -1,7 +1,7 @@
 ---
-layout: page
+layout: home
 title: About
-permalink: /about/
+permalink: /
 ---
 Hi, I'm Chirag Sindhwani.
 

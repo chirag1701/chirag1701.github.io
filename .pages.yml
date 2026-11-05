@@ -16,7 +16,7 @@ content:
     filename: "{year}-{month}-{day}-{primary}.md"
     view:
       primary: title
-      fields: [title, tags, popular]
+      fields: [title, tags]
     fields:
       - name: title
         label: Title
@@ -27,10 +27,6 @@ content:
         description: e.g. ai, careers, life
         type: string
         list: true
-      - name: popular
-        label: Show under "popular"
-        type: boolean
-        default: false
       - name: hn
         label: Hacker News discussion link (optional)
         type: string
@@ -47,7 +43,7 @@ content:
           format: markdown
 
   - name: about
-    label: About page
+    label: Homepage (about me)
     type: file
     path: about.md
     format: yaml-frontmatter
@@ -55,7 +51,7 @@ content:
       - name: layout
         type: string
         hidden: true
-        default: page
+        default: home
       - name: title
         label: Title
         type: string
@@ -63,7 +59,7 @@ content:
       - name: permalink
         type: string
         hidden: true
-        default: /about/
+        default: /
       - name: body
         label: About me
         type: rich-text

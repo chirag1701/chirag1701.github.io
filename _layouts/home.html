@@ -1,0 +1,21 @@
+---
+layout: default
+---
+<header class="site-header"><h1 class="site-title"><a class="home-link" href="{{ '/' | relative_url }}">{{ site.title }}</a></h1></header>
+<main>{% include nav.html %}
+<hr style="margin-bottom:1.75rem">
+
+<section class="about">
+{{ content }}
+</section>
+
+<p class="blog-cta"><a style="box-shadow:none" href="{{ '/blog/' | relative_url }}">Read my blog&nbsp;→</a></p>
+
+{%- if site.posts.size > 0 %}
+<hr style="margin-bottom:1.75rem">
+<section><h2>recent writing</h2>
+{%- for post in site.posts limit: 3 %}<article><header><h3 style="margin-bottom:0.4375rem"><a style="box-shadow:none" href="{{ post.url | relative_url }}">{{ post.title }}</a></h3></header>{% include post-meta.html post=post %}</article>{% endfor %}
+<p style="margin-top:0.875rem"><a style="box-shadow:none" href="{{ '/blog/' | relative_url }}">All posts&nbsp;→</a></p>
+</section>
+{%- endif %}
+</main>

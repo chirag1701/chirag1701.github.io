@@ -1,6 +1,6 @@
 # My blog
 
-A minimal Jekyll blog for GitHub Pages: big lowercase name, a "popular" and "recent" list, tags, RSS,
+A minimal Jekyll site for GitHub Pages: an about-me homepage, a blog at /blog/, tags, RSS,
 footnotes that float into the margin as sidenotes, automatic dark mode, and Google site search.
 
 ## Publish it (one-time setup)
@@ -24,7 +24,6 @@ Add a file to `_posts/` named `YYYY-MM-DD-some-title.md`:
 ---
 title: Some title
 tags: [ai, careers]
-popular: true      # optional — lists it under "popular"
 hn: https://news.ycombinator.com/item?id=...   # optional discussion icons
 lobsters: https://lobste.rs/s/...
 reddit: https://reddit.com/r/...
@@ -44,8 +43,9 @@ Commit it and the site rebuilds automatically. The URL will be `/some-title/`.
 | `_config.yml` | Your name, links, settings |
 | `_posts/` | Blog posts |
 | `about.md` | About page |
-| `index.html` | Homepage (popular + recent, 20 per page) |
-| `popular.html`, `tags.html` | Popular and tag index pages |
+| `about.md` + `_layouts/home.html` | Homepage: about me, then recent posts |
+| `blog/index.html` | All posts, 20 per page |
+| `tags.html` | Tag index page |
 | `assets/css/style.css` | All styling (light + dark) |
 | `assets/js/sidenotes.js` | Moves footnotes into the margin |
 

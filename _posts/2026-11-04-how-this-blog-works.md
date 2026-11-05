@@ -3,7 +3,6 @@ title: How this blog works
 tags:
   - meta
   - tools
-popular: false
 ---
 This blog is a set of Markdown files in a GitHub repository. GitHub Pages turns them into a website every time I push. There's no database, no CMS, and nothing to pay for.
 
@@ -15,7 +14,6 @@ Each post is a file in the `_posts` folder, named like `2026-11-04-how-this-blog
 ---
 title: How this blog works
 tags: [meta, tools]
-popular: true        # optional: shows the post under "popular"
 hn: https://news.ycombinator.com/item?id=123   # optional discussion link
 ---
 ```
