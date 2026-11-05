@@ -180,7 +180,11 @@
       <h2>Set up your writing desk</h2>
       <p>Paste your GitHub token and choose a <strong>passcode</strong>. The token is encrypted with the passcode and kept only on this device — you'll type the passcode each time you open this page.</p>
       <label class="label" for="setup-token">GitHub token</label>
-      <input class="field" id="setup-token" type="password" placeholder="github_pat_…" autocomplete="off" spellcheck="false">
+      <div style="display:flex;gap:8px;align-items:center">
+        <input class="field" id="setup-token" type="password" placeholder="github_pat_…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="flex:1">
+        <button class="btn icon" id="btn-show-token" type="button" title="Show / hide token">👁</button>
+      </div>
+      <p class="hint" id="token-info"></p>
       <label class="label" for="setup-pass">Passcode (at least 6 characters)</label>
       <input class="field" id="setup-pass" type="password" autocomplete="new-password">
       <label class="label" for="setup-pass2">Repeat passcode</label>
@@ -493,11 +497,31 @@
         c.why = r ? (c.ok ? "" : "token can read but not write") : "not found, or the token wasn't given access to it"
         if (r && c.repo === DRAFT_REPO && !r.private) { c.ok = false; c.why = "this repo is PUBLIC — make it private so drafts stay hidden" }
         return c
-      }).catch(function (e) { c.ok = false; c.why = e.status === 401 ? "token not accepted" : e.message; return c })
+      }).catch(function (e) { c.ok = false; c.unauthorized = e.status === 401; c.why = e.status === 401 ? "token not accepted" : e.message; return c })
     })).then(function (r) { token = saved; return r })
   }
+  // Phones often paste tokens with spaces, line breaks or invisible characters — strip them.
+  function cleanToken(v) { return (v || "").replace(/[\s​-‍⁠﻿]+/g, "").replace(/^["'`]+|["'`]+$/g, "") }
+  function describeToken(t) {
+    if (!t) return ""
+    if (/^github_pat_/.test(t)) return t.length === 93 ? "✓ Looks like a fine-grained token (93 characters)." : "⚠ Fine-grained tokens are 93 characters — this one is " + t.length + ". It may have been cut off or pasted twice."
+    if (/^gh[pousr]_/.test(t)) return t.length === 40 ? "✓ Looks like a classic token (40 characters)." : "⚠ Classic tokens are 40 characters — this one is " + t.length + "."
+    return "⚠ GitHub tokens start with github_pat_ — this one starts with “" + t.slice(0, 4) + "…”. Check you copied the right thing."
+  }
+  function refreshTokenInfo() {
+    var raw = $("setup-token").value, t = cleanToken(raw)
+    var info = describeToken(t)
+    if (t && t !== raw.trim()) info += " (Removed spaces/line breaks from the paste.)"
+    $("token-info").textContent = info
+    $("token-info").className = "hint " + (/^✓/.test(info) ? "ok" : info ? "bad" : "")
+  }
+  $("setup-token").addEventListener("input", refreshTokenInfo)
+  $("btn-show-token").onclick = function () { var f = $("setup-token"); f.type = f.type === "password" ? "text" : "password" }
+
   $("btn-setup").onclick = function () {
-    var tok = $("setup-token").value.trim(), p1 = $("setup-pass").value, p2 = $("setup-pass2").value
+    var tok = cleanToken($("setup-token").value), p1 = $("setup-pass").value, p2 = $("setup-pass2").value
+    $("setup-token").value = tok
+    refreshTokenInfo()
     if (!tok) return toast("Paste your GitHub token")
     if (p1.length < 6) return toast("Passcode must be at least 6 characters")
     if (p1 !== p2) return toast("The two passcodes don't match")
@@ -505,7 +529,8 @@
     checkAccess(tok).then(function (checks) {
       $("setup-checks").innerHTML = checks.map(function (c) {
         return "<li class='" + (c.ok ? "ok" : "bad") + "'>" + (c.ok ? "✓ " : "✗ ") + esc(c.label) + (c.why ? " — " + esc(c.why) : "") + "</li>"
-      }).join("")
+      }).join("") + (checks.every(function (c) { return c.unauthorized }) ?
+        "<li class='bad' style='margin-top:10px'>GitHub says this token isn't valid: it was mistyped or cut off, has expired, or was regenerated/deleted. Tap 👁 to check it, or make a new token on GitHub and paste that.</li>" : "")
       if (!checks.every(function (c) { return c.ok })) return
       return sealToken(tok, p1).then(function (vault) {
         lsSet("write:vault", vault); lsDel("write:token"); lsDel("write:fails")
