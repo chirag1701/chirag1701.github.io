@@ -15,7 +15,14 @@ footnotes that float into the margin as sidenotes, automatic dark mode, and Goog
 > Using a repo with any other name (e.g. `blog`)? Set `baseurl: "/blog"` in `_config.yml`;
 > the site will be at `https://<your-username>.github.io/blog`.
 
-## Writing posts
+## Writing posts — the easy way
+
+Open **https://chirag1701.github.io/write/** — a Medium-style editor. Drafts are saved to the private
+`blog-drafts` repo (nobody can see them); **Publish** moves the post into this repo and it goes live.
+It needs a fine-grained GitHub token (Contents: read & write on `chirag1701.github.io` and `blog-drafts`),
+stored only in your browser.
+
+## Writing posts — by hand
 
 Add a file to `_posts/` named `YYYY-MM-DD-some-title.md`:
 
