@@ -93,9 +93,16 @@
   .chip button { border: 0; background: none; cursor: pointer; color: var(--muted); font-size: 16px; line-height: 1; padding: 2px 6px; }
   .tag-input { border: 0; outline: 0; background: transparent; font-size: 15px; min-width: 170px; padding: 6px 0; color: var(--muted); }
 
+  /* Wide screens: every tool visible, wrapping onto a second row if needed. */
   .tools { position: sticky; top: calc(var(--bar-h) + env(safe-area-inset-top)); z-index: 20; background: var(--bg); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-           display: flex; gap: 4px; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 6px 0; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
-  .tools::-webkit-scrollbar { display: none; }
+           display: flex; flex-wrap: wrap; gap: 2px 4px; padding: 6px 0; }
+  /* Phones: one row you swipe sideways, with a fade on the right edge showing there's more. */
+  @media (max-width: 600px) {
+    .tools { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+             margin: 0 -16px; padding: 6px 40px 6px 16px;
+             -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent); }
+    .tools::-webkit-scrollbar { display: none; }
+  }
   .tool { flex: 0 0 auto; min-width: 40px; height: 38px; padding: 0 10px; border: 1px solid transparent; border-radius: 8px; background: transparent; cursor: pointer; font-size: 15px; white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
   .tool:hover { background: var(--soft); }
   .tool:active { background: var(--chip); }
