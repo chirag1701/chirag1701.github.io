@@ -5,4 +5,4 @@ permalink: /about/
 ---
 Hi, I'm Chirag Sindhwani.
 
-You can find me on [linkedin](https://github.com/chirag1701) [instagram](https://instagram.com/chirag_9.34)
+You can find me on [linkedin](https://www.linkedin.com/in/chirag-sindhwani-profile/) [instagram](https://instagram.com/chirag_9.34)

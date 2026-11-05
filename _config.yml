@@ -10,24 +10,22 @@ description: Chirag Sindhwani's blog — notes on software, engineering and what
 url: "https://chirag1701.github.io"
 baseurl: ""
 
-# Links shown in the "subscribe │ about │ popular │ tags │ rss" row.
+# Links shown in the menu row under your name.
 # External links open in a new tab. Remove or add entries freely.
+# (Hidden but still working: /about/, /popular/, /tags/, /rss.xml)
 nav:
-  # Got a newsletter later? Add it back like this:
-  # - title: subscribe
-  #   url: https://buttondown.com/your-newsletter
-  #   external: true
+  - title: linkedin
+    url: https://www.linkedin.com/in/chirag-sindhwani-profile/
+    external: true
   - title: github
     url: https://github.com/chirag1701
     external: true
-  - title: about
-    url: /about/
-  - title: popular
-    url: /popular/
-  - title: tags
-    url: /tags/
-  - title: rss
-    url: /rss.xml
+  - title: instagram
+    url: https://www.instagram.com/chirag_9.34/
+    external: true
+  - title: resume
+    url: /resume.pdf
+    newtab: true
 
 # Used for the "If you liked this post…" line at the end of every post.
 subscribe_url: ""   # put your newsletter URL here to add "consider subscribing" to every post
