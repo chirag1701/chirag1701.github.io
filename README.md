@@ -22,6 +22,7 @@ Add a file to `_posts/` named `YYYY-MM-DD-some-title.md`:
 ```markdown
 ---
 title: Some title
+published: false   # draft: not built into the site. Set to true to post it.
 tags: [ai, careers]
 ---
 

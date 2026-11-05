@@ -1,5 +1,6 @@
 ---
 title: Hello, world
+published: true
 tags:
   - life
 ---

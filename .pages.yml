@@ -16,12 +16,17 @@ content:
     filename: "{year}-{month}-{day}-{primary}.md"
     view:
       primary: title
-      fields: [title, tags]
+      fields: [title, published, tags]
     fields:
       - name: title
         label: Title
         type: string
         required: true
+      - name: published
+        label: Published (visible on the site)
+        description: Leave off while you're still writing. Turn on and Save to post it.
+        type: boolean
+        default: false
       - name: tags
         label: Tags
         description: e.g. ai, careers, life

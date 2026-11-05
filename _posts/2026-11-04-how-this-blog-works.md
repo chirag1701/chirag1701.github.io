@@ -1,5 +1,6 @@
 ---
 title: How this blog works
+published: true
 tags:
   - meta
   - tools
